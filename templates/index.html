@@ -1,0 +1,3480 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Dashboard Académico Integral | Licenciatura em Engenharia Informática - UAb</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --font-main: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      
+      --bg-body: #f8fafc;
+      --bg-sidebar: #ffffff;
+      --bg-card: #ffffff;
+      --bg-card-subtle: #f1f5f9;
+      --border-color: #e2e8f0;
+      --border-focus: #3b82f6;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --text-dim: #94a3b8;
+      
+      --toast-bg-solid: #ffffff;
+      --toast-border-solid: #cbd5e1;
+      --toast-urgent-bg-solid: #fff5f5;
+      --toast-urgent-border-solid: #fca5a5;
+      
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --primary-subtle: #eff6ff;
+      --primary-contrast: #ffffff;
+      
+      --color-sr: #2563eb;
+      --color-sr-bg: #eff6ff;
+      --color-poo: #8b5cf6;
+      --color-poo-bg: #f5f3ff;
+      --color-lc: #059669;
+      --color-lc-bg: #ecfdf5;
+      --color-fbd: #d97706;
+      --color-fbd-bg: #fffbeb;
+      --color-fg: #dc2626;
+      --color-fg-bg: #fef2f2;
+      
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --info: #0ea5e9;
+      
+      --sidebar-width: 320px;
+      --mobile-header-height: 60px;
+      --mobile-bottom-nav-height: 62px;
+      
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 16px;
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.03);
+      --shadow-toast: 0 12px 28px rgba(0, 0, 0, 0.18), 0 4px 10px rgba(0, 0, 0, 0.08);
+      --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    [data-theme="dark"] {
+      --bg-body: #090d16;
+      --bg-sidebar: #0f172a;
+      --bg-card: #131d31;
+      --bg-card-subtle: #1e293b;
+      --border-color: #24344d;
+      --border-focus: #60a5fa;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      
+      --toast-bg-solid: #19253d;
+      --toast-border-solid: #3b5074;
+      --toast-urgent-bg-solid: #2d151c;
+      --toast-urgent-border-solid: #8b2533;
+      
+      --primary: #3b82f6;
+      --primary-hover: #60a5fa;
+      --primary-subtle: #1e293b;
+      --primary-contrast: #ffffff;
+      
+      --color-sr: #3b82f6;
+      --color-sr-bg: #1e293b;
+      --color-poo: #a78bfa;
+      --color-poo-bg: #221a3a;
+      --color-lc: #10b981;
+      --color-lc-bg: #064e3b;
+      --color-fbd: #fbbf24;
+      --color-fbd-bg: #3d2a00;
+      --color-fg: #f87171;
+      --color-fg-bg: #3f1212;
+      
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
+      --shadow-lg: 0 10px 20px -3px rgba(0, 0, 0, 0.5);
+      --shadow-toast: 0 16px 36px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.08);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-main);
+      background-color: var(--bg-body);
+      color: var(--text-main);
+      display: flex;
+      min-height: 100vh;
+      line-height: 1.5;
+      font-size: 14.5px;
+      overflow-x: hidden;
+      transition: background-color 0.25s ease, color 0.25s ease;
+    }
+
+    /* ELEMENTOS MOBILE (OCULTOS NO DESKTOP) */
+    .mobile-header {
+      display: none !important;
+    }
+
+    .mobile-bottom-nav {
+      display: none !important;
+    }
+
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(2px);
+      z-index: 95;
+    }
+
+    aside.sidebar {
+      width: var(--sidebar-width);
+      background: var(--bg-sidebar);
+      border-right: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0; bottom: 0; left: 0;
+      z-index: 105;
+      overflow-y: auto;
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .sidebar-header {
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      background: var(--bg-sidebar);
+      z-index: 10;
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-badge {
+      background: linear-gradient(135deg, #1e40af, #3b82f6);
+      color: #fff;
+      font-weight: 800;
+      font-size: 15px;
+      width: 38px;
+      height: 38px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3);
+    }
+
+    .logo-text h1 {
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+    }
+
+    .logo-text span {
+      font-size: 11.5px;
+      color: var(--text-muted);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .sidebar-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .icon-btn {
+      background: var(--bg-card-subtle);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      width: 34px;
+      height: 34px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 15px;
+      transition: var(--transition);
+    }
+
+    .icon-btn:hover {
+      background: var(--primary-subtle);
+      color: var(--primary);
+      border-color: var(--primary);
+    }
+
+    .sidebar-nav {
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .nav-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      color: var(--text-dim);
+      padding: 8px 12px 4px;
+    }
+
+    .nav-btn {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      border-radius: var(--radius-md);
+      color: var(--text-muted);
+      background: transparent;
+      border: none;
+      width: 100%;
+      text-align: left;
+      font-family: var(--font-main);
+      font-size: 13.5px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition);
+      position: relative;
+    }
+
+    .nav-btn:hover {
+      background: var(--bg-card-subtle);
+      color: var(--text-main);
+    }
+
+    .nav-btn.active {
+      background: var(--primary-subtle);
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    .nav-btn.active::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 6px;
+      bottom: 6px;
+      width: 3.5px;
+      background: var(--primary);
+      border-radius: 0 4px 4px 0;
+    }
+
+    .nav-btn .uc-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .sidebar-metrics {
+      margin-top: auto;
+      padding: 20px 16px;
+      border-top: 1px solid var(--border-color);
+      background: var(--bg-sidebar);
+    }
+
+    .metric-card {
+      background: var(--bg-card-subtle);
+      border-radius: var(--radius-md);
+      padding: 14px;
+      border: 1px solid var(--border-color);
+      margin-bottom: 12px;
+    }
+
+    .metric-card.global {
+      background: linear-gradient(135deg, rgba(37, 99, 235, 0.08), rgba(139, 92, 246, 0.08));
+      border: 1px solid rgba(59, 130, 246, 0.3);
+    }
+
+    .metric-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+
+    .metric-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .metric-value {
+      font-size: 13px;
+      font-weight: 700;
+      font-family: var(--font-mono);
+      color: var(--text-main);
+    }
+
+    .progress-track {
+      height: 7px;
+      background: var(--border-color);
+      border-radius: 10px;
+      overflow: hidden;
+      margin-top: 6px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      border-radius: 10px;
+      transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .progress-subtext {
+      font-size: 11px;
+      color: var(--text-dim);
+      margin-top: 6px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .uc-progress-group {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .uc-progress-item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .uc-progress-info {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11.5px;
+      font-weight: 500;
+    }
+
+    main.content-area {
+      margin-left: var(--sidebar-width);
+      flex: 1;
+      padding: 32px 40px;
+      min-width: 0;
+      position: relative;
+    }
+
+    .page-section {
+      display: none;
+      animation: fadeIn 0.25s ease forwards;
+    }
+
+    .page-section.active { display: block; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .view-header {
+      margin-bottom: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .view-title-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .view-title {
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .view-subtitle {
+      color: var(--text-muted);
+      font-size: 14.5px;
+      max-width: 900px;
+      line-height: 1.6;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px 8px;
+      border-radius: var(--radius-sm);
+      font-size: 11.5px;
+      font-weight: 600;
+      line-height: 1;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .badge-sr { background: var(--color-sr-bg); color: var(--color-sr); border: 1px solid var(--color-sr); }
+    .badge-poo { background: var(--color-poo-bg); color: var(--color-poo); border: 1px solid var(--color-poo); }
+    .badge-lc { background: var(--color-lc-bg); color: var(--color-lc); border: 1px solid var(--color-lc); }
+    .badge-fbd { background: var(--color-fbd-bg); color: var(--color-fbd); border: 1px solid var(--color-fbd); }
+    .badge-fg { background: var(--color-fg-bg); color: var(--color-fg); border: 1px solid var(--color-fg); }
+
+    .badge-sync { background: #fee2e2; color: #b91c1c; }
+    .badge-async { background: #dcfce7; color: #15803d; }
+    .badge-mista { background: #fef3c7; color: #b45309; }
+
+    /* NOTIFICAÇÕES TOAST */
+    .toast-container {
+      position: fixed;
+      top: 24px;
+      right: 24px;
+      z-index: 99999;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      max-width: 430px;
+      pointer-events: none;
+    }
+
+    .toast-card {
+      background-color: var(--toast-bg-solid);
+      border: 1px solid var(--toast-border-solid);
+      border-left: 6px solid var(--primary);
+      padding: 16px 18px;
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-toast);
+      pointer-events: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      animation: slideInRight 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      opacity: 1 !important;
+    }
+
+    .toast-card.urgent {
+      border-left-color: var(--danger);
+      background-color: var(--toast-urgent-bg-solid);
+      border-color: var(--toast-urgent-border-solid);
+    }
+
+    @keyframes slideInRight {
+      from { transform: translateX(110%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    .toast-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .toast-close-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-dim);
+      cursor: pointer;
+      font-size: 16px;
+      line-height: 1;
+      padding: 4px 6px;
+      border-radius: 4px;
+      transition: var(--transition);
+    }
+
+    .toast-close-btn:hover {
+      background: var(--bg-card-subtle);
+      color: var(--text-main);
+    }
+
+    .toast-title {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--text-main);
+      line-height: 1.35;
+    }
+
+    .toast-desc {
+      font-size: 12.5px;
+      color: var(--text-muted);
+      line-height: 1.45;
+    }
+
+    .toast-footer {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 8px;
+      margin-top: 4px;
+      border-top: 1px solid var(--border-color);
+      padding-top: 8px;
+    }
+
+    .toast-btn {
+      font-size: 11.5px;
+      padding: 5px 12px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-weight: 600;
+      border: none;
+      transition: var(--transition);
+    }
+
+    .toast-btn-dismiss { 
+      background: var(--bg-card-subtle); 
+      color: var(--text-muted); 
+      border: 1px solid var(--border-color);
+    }
+    .toast-btn-dismiss:hover { 
+      color: var(--text-main); 
+      background: var(--border-color);
+    }
+    .toast-btn-mute { 
+      background: var(--primary); 
+      color: #ffffff; 
+    }
+    .toast-btn-mute:hover { 
+      background: var(--primary-hover); 
+    }
+
+    /* CONTROLES E PAINEL DO CALENDÁRIO */
+    .calendar-controls {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 14px 20px;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 14px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .cal-toggles {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .cal-toggle-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      margin-right: 4px;
+    }
+
+    .cal-toggle-pill {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
+      border-radius: 20px;
+      border: 1px solid var(--border-color);
+      background: var(--bg-card);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      user-select: none;
+      transition: var(--transition);
+    }
+
+    .cal-toggle-pill input { display: none; }
+    .cal-toggle-pill .dot { width: 8px; height: 8px; border-radius: 50%; }
+    .cal-toggle-pill.active { border-color: currentColor; box-shadow: var(--shadow-sm); }
+    .cal-toggle-pill:not(.active) { opacity: 0.45; filter: grayscale(0.7); }
+
+    .cal-nav {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .cal-month-title {
+      font-size: 16px;
+      font-weight: 700;
+      font-family: var(--font-mono);
+      min-width: 170px;
+      text-align: center;
+    }
+
+    /* GRELHA ADAPTATIVA RESPONSIVA (AUTO-FIT TOTAL SEM OVERFLOW HORIZONTAL) */
+    .calendar-grid-container {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+    }
+
+    .cal-weekdays {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      background: var(--bg-card-subtle);
+      border-bottom: 1px solid var(--border-color);
+      text-align: center;
+      font-weight: 700;
+      font-size: 12px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .cal-weekdays div { 
+      padding: 10px 4px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .cal-days-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      grid-auto-rows: minmax(90px, 1fr);
+      width: 100%;
+    }
+
+    .cal-day-cell {
+      border-right: 1px solid var(--border-color);
+      border-bottom: 1px solid var(--border-color);
+      padding: 6px 5px;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      background: var(--bg-card);
+      position: relative;
+      min-width: 0;
+      overflow: hidden;
+    }
+
+    .cal-day-cell:nth-child(7n) { border-right: none; }
+    .cal-day-cell.other-month { background: var(--bg-body); opacity: 0.4; }
+    .cal-day-cell.today { background: var(--primary-subtle); }
+    .cal-day-cell.today .day-number {
+      background: var(--primary);
+      color: #fff;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .day-number {
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 2px;
+      font-family: var(--font-mono);
+      line-height: 1;
+    }
+
+    .cal-event-bar {
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 4px;
+      border-radius: var(--radius-sm);
+      color: #fff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      cursor: pointer;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+      transition: transform 0.15s ease;
+      line-height: 1.2;
+      min-width: 0;
+      width: 100%;
+    }
+
+    .cal-event-bar:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.08);
+    }
+
+    .cal-event-bar span:first-child {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .cal-event-bar .event-val {
+      background: rgba(0,0,0,0.25);
+      border-radius: 3px;
+      padding: 0 3px;
+      font-size: 8.5px;
+      font-family: var(--font-mono);
+      margin-left: 3px;
+      flex-shrink: 0;
+    }
+
+    /* ROTEIRO SEMANAL & ACORDEÃO */
+    .weeks-container {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .weeks-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 12px 20px;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 8px;
+    }
+
+    .week-block {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      overflow: hidden;
+    }
+
+    .week-block.current-week {
+      border: 2px solid var(--primary);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+    }
+
+    .week-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 24px;
+      cursor: pointer;
+      user-select: none;
+      background: var(--bg-card);
+      transition: background 0.15s ease;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .week-header:hover {
+      background: var(--bg-card-subtle);
+    }
+
+    .week-header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .week-chevron {
+      font-size: 14px;
+      color: var(--text-dim);
+      transition: transform 0.25s ease;
+      display: inline-block;
+    }
+
+    .week-block.expanded .week-chevron {
+      transform: rotate(90deg);
+      color: var(--primary);
+    }
+
+    .week-number {
+      font-size: 17px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .week-dates {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text-muted);
+      background: var(--bg-card-subtle);
+      padding: 4px 10px;
+      border-radius: 20px;
+      border: 1px solid var(--border-color);
+    }
+
+    .current-week-tag {
+      background: var(--primary);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border-radius: 20px;
+      letter-spacing: 0.04em;
+    }
+
+    .week-content-body {
+      display: none;
+      padding: 0 24px 24px 24px;
+      border-top: 1px solid var(--border-color);
+      animation: expandWeek 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .week-block.expanded .week-content-body {
+      display: block;
+    }
+
+    @keyframes expandWeek {
+      from { opacity: 0; transform: translateY(-6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .week-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 16px;
+      padding-top: 18px;
+    }
+
+    .uc-activity-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      position: relative;
+      transition: var(--transition);
+    }
+
+    .uc-activity-card:hover {
+      box-shadow: var(--shadow-md);
+      border-color: var(--border-focus);
+    }
+
+    .uc-activity-card.is-done {
+      opacity: 0.45;
+      filter: grayscale(0.85);
+      background: var(--bg-card-subtle);
+    }
+
+    .uc-activity-card.is-done .card-task-title,
+    .uc-activity-card.is-done .card-topics {
+      text-decoration: line-through;
+    }
+
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .card-uc-tag {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: var(--radius-sm);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      letter-spacing: 0.02em;
+    }
+
+    .smart-checkbox {
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      border: 2px solid var(--border-color);
+      border-radius: 6px;
+      outline: none;
+      cursor: pointer;
+      display: grid;
+      place-content: center;
+      background: var(--bg-card);
+      transition: var(--transition);
+      flex-shrink: 0;
+    }
+
+    .smart-checkbox:hover { border-color: var(--primary); }
+    .smart-checkbox:checked {
+      background: var(--success);
+      border-color: var(--success);
+    }
+    .smart-checkbox:checked::before {
+      content: "✓";
+      color: #fff;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .card-task-title {
+      font-size: 14.5px;
+      font-weight: 700;
+      color: var(--text-main);
+      line-height: 1.35;
+    }
+
+    .card-topics {
+      font-size: 12.5px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .card-tags-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 2px;
+      margin-bottom: 2px;
+    }
+
+    .topic-tag {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 4px;
+      background: var(--bg-card-subtle);
+      color: var(--text-muted);
+      border: 1px solid var(--border-color);
+      white-space: nowrap;
+      transition: var(--transition);
+    }
+
+    .topic-tag:hover {
+      color: var(--text-main);
+      border-color: var(--text-dim);
+    }
+
+    .card-highlight-bar {
+      margin-top: auto;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 8px 12px;
+      border-radius: var(--radius-sm);
+      line-height: 1.3;
+      background: var(--bg-card-subtle);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+    }
+
+    .card-highlight-bar.alert-danger {
+      background: rgba(220, 38, 38, 0.08);
+      border: 1px solid rgba(220, 38, 38, 0.35);
+      color: #b91c1c;
+    }
+
+    [data-theme="dark"] .card-highlight-bar.alert-danger {
+      background: rgba(239, 68, 68, 0.14);
+      border-color: rgba(239, 68, 68, 0.4);
+      color: #fca5a5;
+    }
+
+    .card-highlight-bar.alert-formativa {
+      background: rgba(16, 185, 129, 0.08);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: #047857;
+    }
+
+    [data-theme="dark"] .card-highlight-bar.alert-formativa {
+      background: rgba(16, 185, 129, 0.12);
+      border-color: rgba(16, 185, 129, 0.35);
+      color: #6ee7b7;
+    }
+
+    .table-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+    }
+
+    .table-toolbar {
+      padding: 16px 20px;
+      background: var(--bg-card-subtle);
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .custom-select {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 8px 14px;
+      border-radius: var(--radius-md);
+      font-size: 13px;
+      font-family: var(--font-main);
+      font-weight: 500;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .table-container { overflow-x: auto; }
+
+    .deliveries-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 13.5px;
+    }
+
+    .deliveries-table th {
+      background: var(--bg-card-subtle);
+      padding: 12px 16px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      font-size: 11.5px;
+      letter-spacing: 0.04em;
+      border-bottom: 1px solid var(--border-color);
+      cursor: pointer;
+      user-select: none;
+      white-space: nowrap;
+      transition: color 0.15s ease;
+    }
+
+    .deliveries-table th:hover { color: var(--primary); }
+
+    .deliveries-table td {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border-color);
+      vertical-align: middle;
+    }
+
+    .deliveries-table tr:hover { background: var(--bg-card-subtle); }
+    .deliveries-table tr.is-done {
+      opacity: 0.45;
+      text-decoration: line-through;
+    }
+
+    .col-mono {
+      font-family: var(--font-mono);
+      font-size: 12.5px;
+    }
+
+    .cota-pill {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      font-weight: 700;
+      background: var(--bg-card-subtle);
+      border: 1px solid var(--border-color);
+    }
+
+    .uc-hero-banner {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      margin-bottom: 32px;
+      box-shadow: var(--shadow-sm);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .uc-hero-banner::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 6px;
+      background: var(--hero-accent, var(--primary));
+    }
+
+    .uc-hero-meta {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    .uc-hero-title {
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      margin-bottom: 8px;
+    }
+
+    .uc-hero-prof {
+      font-size: 14px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .uc-sections-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+
+    .uc-section-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .uc-section-title {
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--text-main);
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 12px;
+    }
+
+    .ra-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 16px;
+    }
+
+    .ra-box {
+      background: var(--bg-card-subtle);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      border: 1px solid var(--border-color);
+    }
+
+    .ra-id {
+      font-weight: 800;
+      color: var(--primary);
+      font-size: 12px;
+      font-family: var(--font-mono);
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    .ra-desc {
+      font-size: 13.5px;
+      color: var(--text-main);
+      line-height: 1.5;
+    }
+
+    .rule-callout {
+      background: rgba(239, 68, 68, 0.05);
+      border-left: 4px solid var(--danger);
+      padding: 16px 20px;
+      border-radius: 0 var(--radius-md) var(--radius-md) 0;
+      margin-top: 16px;
+      font-size: 13.5px;
+    }
+
+    .rule-callout strong { color: var(--danger); }
+
+    .bib-item {
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border-color);
+      font-size: 13.5px;
+      line-height: 1.6;
+    }
+    .bib-item:last-child { border-bottom: none; }
+    .bib-tag {
+      font-size: 10.5px;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      margin-right: 8px;
+    }
+    .bib-obrig { background: #dbeafe; color: #1e40af; }
+    .bib-comp { background: #f1f5f9; color: #475569; }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(4px);
+      z-index: 10000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-backdrop.open { display: flex; }
+
+    .modal-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      width: 100%;
+      max-width: 500px;
+      box-shadow: var(--shadow-lg);
+      overflow: hidden;
+    }
+
+    .modal-header {
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-title {
+      font-size: 17px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .modal-body {
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .setting-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 44px;
+      height: 24px;
+      flex-shrink: 0;
+    }
+
+    .switch input { opacity: 0; width: 0; height: 0; }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: var(--border-color);
+      transition: .2s;
+      border-radius: 24px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 18px; width: 18px;
+      left: 3px; bottom: 3px;
+      background-color: white;
+      transition: .2s;
+      border-radius: 50%;
+    }
+
+    input:checked + .slider { background-color: var(--primary); }
+    input:checked + .slider:before { transform: translateX(20px); }
+
+    .btn {
+      padding: 8px 16px;
+      border-radius: var(--radius-md);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1px solid transparent;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: var(--transition);
+      font-family: var(--font-main);
+    }
+
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-primary:hover { background: var(--primary-hover); }
+    .btn-outline { background: transparent; border-color: var(--border-color); color: var(--text-main); }
+    .btn-outline:hover { background: var(--bg-card-subtle); }
+
+    /* MEDIA QUERIES MOBILE EXCLUSIVAMENTE PARA TELAS PEQUENAS (<= 850px) */
+    @media (max-width: 850px) {
+      body {
+        font-size: 13.5px;
+      }
+
+      .mobile-header {
+        display: flex !important;
+        position: fixed;
+        top: 0; left: 0; right: 0;
+        height: var(--mobile-header-height);
+        background: var(--bg-sidebar);
+        border-bottom: 1px solid var(--border-color);
+        z-index: 100;
+        padding: 0 16px;
+        align-items: center;
+        justify-content: space-between;
+        box-shadow: var(--shadow-sm);
+      }
+
+      .mobile-header-left {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .mobile-header-title {
+        font-size: 15px;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+      }
+
+      .mobile-header-actions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .mobile-bottom-nav {
+        display: flex !important;
+        position: fixed;
+        bottom: 0; left: 0; right: 0;
+        height: var(--mobile-bottom-nav-height);
+        background: var(--bg-sidebar);
+        border-top: 1px solid var(--border-color);
+        z-index: 100;
+        padding: 4px 8px env(safe-area-inset-bottom, 4px) 8px;
+        justify-content: space-around;
+        align-items: center;
+        box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.04);
+      }
+
+      .bottom-nav-btn {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 3px;
+        background: transparent;
+        border: none;
+        color: var(--text-muted);
+        cursor: pointer;
+        font-family: var(--font-main);
+        font-size: 10.5px;
+        font-weight: 600;
+        padding: 6px 0;
+        border-radius: var(--radius-sm);
+        transition: var(--transition);
+      }
+
+      .bottom-nav-btn .icon {
+        font-size: 18px;
+        line-height: 1;
+      }
+
+      .bottom-nav-btn.active {
+        color: var(--primary);
+        font-weight: 700;
+      }
+
+      .sidebar-overlay.active {
+        display: block;
+      }
+
+      aside.sidebar {
+        transform: translateX(-100%);
+        width: 85%;
+        max-width: 320px;
+        box-shadow: 4px 0 24px rgba(0, 0, 0, 0.25);
+      }
+
+      aside.sidebar.mobile-open {
+        transform: translateX(0);
+      }
+
+      main.content-area {
+        margin-left: 0;
+        padding: calc(var(--mobile-header-height) + 16px) 14px calc(var(--mobile-bottom-nav-height) + 24px) 14px;
+        width: 100%;
+      }
+
+      .toast-container {
+        top: calc(var(--mobile-header-height) + 10px);
+        left: 14px;
+        right: 14px;
+        max-width: none;
+      }
+
+      .toast-card {
+        padding: 12px 14px;
+      }
+
+      .calendar-controls {
+        padding: 12px 14px;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+      }
+
+      .cal-toggles {
+        justify-content: center;
+        gap: 6px;
+      }
+
+      .cal-toggle-pill {
+        padding: 4px 9px;
+        font-size: 11px;
+      }
+
+      .cal-nav {
+        justify-content: space-between;
+        width: 100%;
+      }
+
+      .cal-month-title {
+        min-width: auto;
+        font-size: 15px;
+      }
+
+      .cal-weekdays div {
+        padding: 6px 2px;
+        font-size: 10.5px;
+      }
+
+      .cal-days-grid {
+        grid-auto-rows: minmax(68px, 1fr);
+      }
+
+      .cal-day-cell {
+        padding: 4px 2px;
+        gap: 2px;
+      }
+
+      .day-number {
+        font-size: 10.5px;
+      }
+
+      .cal-event-bar {
+        font-size: 9px;
+        padding: 1px 3px;
+        border-radius: 3px;
+      }
+
+      .cal-event-bar .event-val {
+        display: none;
+      }
+
+      .weeks-toolbar {
+        padding: 10px 14px;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .weeks-toolbar > div {
+        width: 100%;
+        justify-content: space-between;
+      }
+
+      .weeks-toolbar .btn {
+        flex: 1;
+        justify-content: center;
+        font-size: 11.5px;
+        padding: 6px 8px;
+      }
+
+      .week-block {
+        border-radius: var(--radius-md);
+      }
+
+      .week-header {
+        padding: 14px 16px;
+        gap: 8px;
+      }
+
+      .week-number {
+        font-size: 15px;
+      }
+
+      .week-dates {
+        font-size: 11px;
+        padding: 3px 8px;
+      }
+
+      .week-content-body {
+        padding: 0 14px 16px 14px;
+      }
+
+      .week-cards-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+        padding-top: 14px;
+      }
+
+      .uc-activity-card {
+        padding: 14px;
+      }
+
+      .table-toolbar {
+        padding: 12px 14px;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+      }
+
+      .search-filter-group {
+        width: 100%;
+      }
+
+      .custom-select {
+        width: 100%;
+      }
+
+      .deliveries-table th, 
+      .deliveries-table td {
+        padding: 10px 12px;
+        font-size: 12px;
+      }
+
+      .uc-hero-banner {
+        padding: 20px 16px;
+        margin-bottom: 20px;
+      }
+
+      .uc-hero-title {
+        font-size: 21px;
+      }
+
+      .uc-section-card {
+        padding: 18px 16px;
+      }
+
+      .ra-list {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- MOBILE HEADER (APENAS VISÍVEL EM TELAS <= 850px) -->
+  <header class="mobile-header">
+    <div class="mobile-header-left">
+      <button class="icon-btn" id="openDrawerBtn" title="Abrir Menu">☰</button>
+      <div class="logo-badge" style="width: 32px; height: 32px; font-size: 13px;">UAb</div>
+      <div class="mobile-header-title">LEI Dashboard</div>
+    </div>
+    <div class="mobile-header-actions">
+      <button class="icon-btn" id="mobileThemeToggleBtn" title="Alternar Tema">☀️</button>
+      <button class="icon-btn" id="mobileOpenSettingsBtn" title="Definições">⚙️</button>
+    </div>
+  </header>
+
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <!-- SIDEBAR FIXA EM DESKTOP -->
+  <aside class="sidebar" id="mainSidebar">
+    <div class="sidebar-header">
+      <div class="logo-container">
+        <div class="logo-badge">UAb</div>
+        <div class="logo-text">
+          <h1>Dashboard LEI</h1>
+          <span>Semestre 2026/2027</span>
+        </div>
+      </div>
+      <div class="sidebar-actions">
+        <button class="icon-btn" id="themeToggleBtn" title="Alternar Modo Claro/Escuro">☀️</button>
+        <button class="icon-btn" id="openSettingsBtn" title="Definições de Notificações">⚙️</button>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-label">Vistas Gerais</div>
+      <button class="nav-btn active" data-view="calendarView">
+        <span>📅</span> Calendário Geral
+      </button>
+      <button class="nav-btn" data-view="weeksView">
+        <span>🗺️</span> Roteiro Semanal
+      </button>
+      <button class="nav-btn" data-view="deliveriesView">
+        <span>📋</span> Entregas & Critérios
+      </button>
+
+      <div class="nav-label" style="margin-top: 14px;">Unidades Curriculares</div>
+      <button class="nav-btn" data-view="ucView" data-uc="SR">
+        <span class="uc-dot" style="background: var(--color-sr);"></span>
+        <span>Sistemas em Rede</span>
+      </button>
+      <button class="nav-btn" data-view="ucView" data-uc="POO">
+        <span class="uc-dot" style="background: var(--color-poo);"></span>
+        <span>Prog. por Objetos</span>
+      </button>
+      <button class="nav-btn" data-view="ucView" data-uc="LC">
+        <span class="uc-dot" style="background: var(--color-lc);"></span>
+        <span>Linguagens e Computação</span>
+      </button>
+      <button class="nav-btn" data-view="ucView" data-uc="FBD">
+        <span class="uc-dot" style="background: var(--color-fbd);"></span>
+        <span>Fund. Bases de Dados</span>
+      </button>
+      <button class="nav-btn" data-view="ucView" data-uc="FG">
+        <span class="uc-dot" style="background: var(--color-fg);"></span>
+        <span>Física Geral</span>
+      </button>
+    </nav>
+
+    <div class="sidebar-metrics">
+      <div class="metric-card global">
+        <div class="metric-header">
+          <span class="metric-title">Progresso Global</span>
+          <span class="metric-value" id="globalProgressPercent">0%</span>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill" id="globalProgressBar" style="width: 0%; background: linear-gradient(90deg, #3b82f6, #8b5cf6);"></div>
+        </div>
+        <div class="progress-subtext">
+          <span id="globalTasksCount">0/0 concluídas</span>
+          <span>Roteiro Semanal</span>
+        </div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-header">
+          <span class="metric-title">Progresso por Disciplina</span>
+        </div>
+        <div class="uc-progress-group">
+          <div class="uc-progress-item">
+            <div class="uc-progress-info">
+              <span>Sistemas em Rede</span>
+              <span class="col-mono" id="progTextSR">0%</span>
+            </div>
+            <div class="progress-track">
+              <div class="progress-fill" id="progBarSR" style="width: 0%; background: var(--color-sr);"></div>
+            </div>
+          </div>
+          <div class="uc-progress-item">
+            <div class="uc-progress-info">
+              <span>Prog. Objetos</span>
+              <span class="col-mono" id="progTextPOO">0%</span>
+            </div>
+            <div class="progress-track">
+              <div class="progress-fill" id="progBarPOO" style="width: 0%; background: var(--color-poo);"></div>
+            </div>
+          </div>
+          <div class="uc-progress-item">
+            <div class="uc-progress-info">
+              <span>Ling. Computação</span>
+              <span class="col-mono" id="progTextLC">0%</span>
+            </div>
+            <div class="progress-track">
+              <div class="progress-fill" id="progBarLC" style="width: 0%; background: var(--color-lc);"></div>
+            </div>
+          </div>
+          <div class="uc-progress-item">
+            <div class="uc-progress-info">
+              <span>Bases de Dados</span>
+              <span class="col-mono" id="progTextFBD">0%</span>
+            </div>
+            <div class="progress-track">
+              <div class="progress-fill" id="progBarFBD" style="width: 0%; background: var(--color-fbd);"></div>
+            </div>
+          </div>
+          <div class="uc-progress-item">
+            <div class="uc-progress-info">
+              <span>Física Geral</span>
+              <span class="col-mono" id="progTextFG">0%</span>
+            </div>
+            <div class="progress-track">
+              <div class="progress-fill" id="progBarFG" style="width: 0%; background: var(--color-fg);"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MOBILE BOTTOM NAV (APENAS VISÍVEL EM TELAS <= 850px) -->
+  <nav class="mobile-bottom-nav">
+    <button class="bottom-nav-btn active" data-view="calendarView">
+      <span class="icon">📅</span>
+      <span>Calendário</span>
+    </button>
+    <button class="bottom-nav-btn" data-view="weeksView">
+      <span class="icon">🗺️</span>
+      <span>Roteiro</span>
+    </button>
+    <button class="bottom-nav-btn" data-view="deliveriesView">
+      <span class="icon">📋</span>
+      <span>Entregas</span>
+    </button>
+    <button class="bottom-nav-btn" id="bottomDrawerTrigger">
+      <span class="icon">📚</span>
+      <span>Disciplinas</span>
+    </button>
+  </nav>
+
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- MAIN AREA -->
+  <main class="content-area">
+
+    <!-- VIEW A: CALENDÁRIO GERAL -->
+    <section class="page-section active" id="calendarView">
+      <div class="view-header">
+        <div class="view-title-row">
+          <h2 class="view-title">📅 Calendário Geral de Atividades</h2>
+          <div class="cal-nav">
+            <button class="btn btn-outline" id="prevMonthBtn">◀ Anterior</button>
+            <span class="cal-month-title" id="calMonthDisplay">Setembro 2026</span>
+            <button class="btn btn-outline" id="nextMonthBtn">Seguinte ▶</button>
+          </div>
+        </div>
+        <p class="view-subtitle">
+          Grelha matricial uniforme de 7 colunas (Segunda a Domingo) 100% responsiva que se ajusta à largura do ecrã mantendo todos os dias sempre visíveis sem scroll horizontal.
+        </p>
+      </div>
+
+      <div class="calendar-controls">
+        <div class="cal-toggles">
+          <span class="cal-toggle-label">Filtrar UCs:</span>
+          <label class="cal-toggle-pill active" style="color: var(--color-sr);">
+            <input type="checkbox" data-uc-toggle="SR" checked>
+            <span class="dot" style="background: var(--color-sr);"></span>
+            Sistemas em Rede
+          </label>
+          <label class="cal-toggle-pill active" style="color: var(--color-poo);">
+            <input type="checkbox" data-uc-toggle="POO" checked>
+            <span class="dot" style="background: var(--color-poo);"></span>
+            POO
+          </label>
+          <label class="cal-toggle-pill active" style="color: var(--color-lc);">
+            <input type="checkbox" data-uc-toggle="LC" checked>
+            <span class="dot" style="background: var(--color-lc);"></span>
+            Ling. Computação
+          </label>
+          <label class="cal-toggle-pill active" style="color: var(--color-fbd);">
+            <input type="checkbox" data-uc-toggle="FBD" checked>
+            <span class="dot" style="background: var(--color-fbd);"></span>
+            Bases de Dados
+          </label>
+          <label class="cal-toggle-pill active" style="color: var(--color-fg);">
+            <input type="checkbox" data-uc-toggle="FG" checked>
+            <span class="dot" style="background: var(--color-fg);"></span>
+            Física Geral
+          </label>
+        </div>
+      </div>
+
+      <div class="calendar-grid-container">
+        <div class="cal-weekdays">
+          <div>Segunda</div>
+          <div>Terça</div>
+          <div>Quarta</div>
+          <div>Quinta</div>
+          <div>Sexta</div>
+          <div>Sábado</div>
+          <div>Domingo</div>
+        </div>
+        <div class="cal-days-grid" id="calDaysGrid"></div>
+      </div>
+    </section>
+
+    <!-- VIEW B: ROTEIRO SEMANAL -->
+    <section class="page-section" id="weeksView">
+      <div class="view-header">
+        <h2 class="view-title">🗺️ Roteiro Semanal de Aprendizagem</h2>
+        <p class="view-subtitle">
+          Organização cronológica de 16 semanas com caixas expansíveis. As caixas de seleção alimentam as percentagens de progresso global e por UC, com interligação bidirecional com o Painel de Entregas & Critérios.
+        </p>
+      </div>
+
+      <div class="weeks-toolbar">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <button class="btn btn-outline" id="focusCurrentWeekBtn">🎯 Centrar na Semana Atual</button>
+        </div>
+        <div style="display: flex; gap: 8px;">
+          <button class="btn btn-outline" id="expandAllWeeksBtn">Expandir Todas</button>
+          <button class="btn btn-outline" id="collapseAllWeeksBtn">Minimizar Todas</button>
+        </div>
+      </div>
+
+      <div class="weeks-container" id="weeksList"></div>
+    </section>
+
+    <!-- VIEW C: PAINEL DE ENTREGAS -->
+    <section class="page-section" id="deliveriesView">
+      <div class="view-header">
+        <h2 class="view-title">📋 Painel Consolidado de Entregas & Critérios</h2>
+        <p class="view-subtitle">
+          Tabela auditável de momentos de avaliação. Selecionar uma entrega aqui atualiza instantaneamente o cartão respetivo no Roteiro Semanal e o progresso correspondente.
+        </p>
+      </div>
+
+      <div class="table-card">
+        <div class="table-toolbar">
+          <div class="search-filter-group">
+            <label for="tableUcFilter" style="font-size: 12px; font-weight: 700; color: var(--text-dim); text-transform: uppercase;">Filtrar UC:</label>
+            <select class="custom-select" id="tableUcFilter">
+              <option value="ALL">Todas as Disciplinas</option>
+              <option value="SR">Sistemas em Rede (21106)</option>
+              <option value="POO">Programação por Objetos (21093)</option>
+              <option value="LC">Linguagens e Computação (21078)</option>
+              <option value="FBD">Fundamentos de Bases de Dados (21053)</option>
+              <option value="FG">Física Geral (21048)</option>
+            </select>
+          </div>
+          <div style="font-size: 13px; color: var(--text-muted); font-family: var(--font-mono);" id="deliveriesCountLabel"></div>
+        </div>
+
+        <div class="table-container">
+          <table class="deliveries-table">
+            <thead>
+              <tr>
+                <th style="width: 40px;">Status</th>
+                <th data-sort="uc">UC <span class="sort-icon">↕</span></th>
+                <th data-sort="name">Atividade / Momento Oficial <span class="sort-icon">↕</span></th>
+                <th data-sort="type">Tipo <span class="sort-icon">↕</span></th>
+                <th data-sort="start">Data Início <span class="sort-icon">↕</span></th>
+                <th data-sort="deadline">Data Limite (Hora) <span class="sort-icon">↕</span></th>
+                <th data-sort="weight">Cotação <span class="sort-icon">↕</span></th>
+              </tr>
+            </thead>
+            <tbody id="deliveriesTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- VIEW D: PÁGINAS DEDICADAS POR UC -->
+    <section class="page-section" id="ucView">
+      <div id="ucContentPlaceholder"></div>
+    </section>
+
+  </main>
+
+  <!-- MODAL: DEFINIÇÕES -->
+  <div class="modal-backdrop" id="settingsModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 class="modal-title">⚙️ Definições de Notificações</h3>
+        <button class="icon-btn" id="closeSettingsModal">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="setting-row">
+          <div>
+            <div style="font-size: 14px; font-weight: 600;">Motor de Notificações Ativo</div>
+            <div style="font-size: 12px; color: var(--text-muted);">Apresentar avisos toast no canto superior direito para eventos próximos</div>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="notifyEnabledToggle" checked>
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div class="setting-row">
+          <div>
+            <div style="font-size: 14px; font-weight: 600;">Janela de Antecedência</div>
+            <div style="font-size: 12px; color: var(--text-muted);">Com que antecedência pretende ser alertado sobre prazos?</div>
+          </div>
+          <select class="custom-select" id="notifyAdvanceSelect">
+            <option value="0">No próprio dia</option>
+            <option value="1">1 dia antes</option>
+            <option value="2">2 dias antes</option>
+            <option value="3" selected>3 dias antes</option>
+            <option value="5">5 dias antes</option>
+            <option value="7">7 dias antes</option>
+          </select>
+        </div>
+
+        <div style="border-top: 1px solid var(--border-color); padding-top: 16px; display: flex; flex-direction: column; gap: 12px;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <div style="font-size: 14px; font-weight: 600;">Notificações Silenciadas</div>
+              <div style="font-size: 12px; color: var(--text-muted);" id="mutedCountLabel">0 notificações silenciadas permanentemente</div>
+            </div>
+            <button class="btn btn-outline" id="clearMutedBtn">Repor Lista</button>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 8px;">
+            <div>
+              <div style="font-size: 14px; font-weight: 600;">Disparar Alerta de Teste</div>
+              <div style="font-size: 12px; color: var(--text-muted);">Verifique o fundo opaco sólido e a visibilidade perfeita</div>
+            </div>
+            <button class="btn btn-primary" id="testAlertBtn">Testar Toast</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* DADOS EXAUSTIVOS DOS PUCS */
+    const UCS = {
+      SR: {
+        id: "SR",
+        code: "21106",
+        name: "Sistemas em Rede",
+        fullName: "Sistemas em Rede (2026-2027)",
+        color: "var(--color-sr)",
+        colorBg: "var(--color-sr-bg)",
+        badgeClass: "badge-sr",
+        prof: "Arnaldo Pinto Santos",
+        year: "2026-2027",
+        presentation: `A UC de Sistemas em Rede introduz os conceitos fundamentais das redes de computadores, proporcionando aos estudantes uma compreensão sólida dos mecanismos que possibilitam a comunicação entre sistemas computacionais. Segue uma abordagem pedagógica inspirada no modelo Top-Down de Kurose e Ross, com o estudo das aplicações e dos serviços mais utilizados na Internet, protocolos de transporte, interligação de redes e tecnologias de redes locais. A componente prática recorre ao Wireshark e utilitários TCP/IP. Culmina com um Projeto Final (Global de Redes) com desenvolvimento assíncrono e validação síncrona no Wiseflow.`,
+        learningOutcomes: [
+          { id: "RA1", title: "Aplicações e Arquiteturas de Rede", desc: "Analisar as arquiteturas de rede e os principais protocolos de aplicação utilizados na Internet." },
+          { id: "RA2", title: "Comunicação e Transporte", desc: "Explicar e configurar mecanismos de comunicação entre sistemas recorrendo aos protocolos da camada de transporte." },
+          { id: "RA3", title: "Interligação de Redes", desc: "Projetar e configurar redes IP utilizando mecanismos de endereçamento, encaminhamento e serviços de rede." },
+          { id: "RA4", title: "Redes Locais e Gestão", desc: "Integrar, monitorizar e diagnosticar redes locais considerando requisitos de desempenho, disponibilidade e segurança." }
+        ],
+        competences: [
+          "C1: Analisar redes de computadores, identificando aplicações e requisitos de comunicação, desempenho e fiabilidade.",
+          "C3: Projetar e implementar soluções de redes recorrendo a protocolos, arquiteturas e tecnologias adequadas.",
+          "C5: Gerir e diagnosticar redes de computadores, assegurando a continuidade dos serviços.",
+          "C9: Integrar conhecimentos de engenharia e sistemas computacionais na análise e otimização de redes."
+        ],
+        methodology: `Progressão estruturada pelos 4 módulos com análise prática de protocolos em Wireshark, exercícios e estudos de caso. O Projeto Final culmina no Wiseflow com validação científica síncrona.`,
+        approvalRules: {
+          regime: "Regime exclusivo de Avaliação Contínua (Tipologia 1).",
+          weights: "3 Atividades Assíncronas (8 valores) + 1 Atividade Síncrona Final (12 valores) = 20 valores.",
+          breakdown: [
+            "Atividade Sumativa 1 - Trabalho 1 (M1 e M2): 3 valores (15%) [19/10 a 25/10 23:59]",
+            "Atividade Sumativa 2 - Trabalho 2 (M3 e M4): 3 valores (15%) [16/12 a 21/12 23:59]",
+            "Atividade Sumativa 3 - Síntese da Participação (0.5v por módulo em M1..M4): 2 valores (10%) distribuídos ao longo do semestre",
+            "Atividade Sumativa 4 - Projeto Final: 12 valores (Desenvolvimento assíncrono de 04/01 até 24/01 [4v] + Validação Síncrona no Wiseflow a 25/01/2027 às 16:00 [8v])"
+          ],
+          criteria: [
+            "Realizar todas as atividades de avaliação sumativa.",
+            "Obter no somatório das atividades assíncronas aproveitamento mínimo de 50% (mínimo de 4.0 em 8.0 valores).",
+            "Obter na atividade síncrona final aproveitamento mínimo de 50% (mínimo de 6.0 em 12.0 valores).",
+            "Obter classificação final igual ou superior a 10 valores.",
+            "Possui Cartão de Aprendizagem individual na PlataformAbERTA."
+          ]
+        },
+        bibliography: {
+          mandatory: [
+            "Kurose, J. F., & Ross, K. W. (2022). Computer networking: A top-down approach (8th ed.). Pearson. (Manual Principal)",
+            "Tanenbaum, A. S., Wetherall, D. J., & Feamster, N. (2021). Computer networks (6th ed.). Pearson. (Referência complementar)"
+          ],
+          complementary: [
+            "Forouzan, B. A. (2017). Data communications and networking (5th ed.). McGraw-Hill Education.",
+            "Peterson, L. L., & Davie, B. S. (2021). Computer networks: A systems approach (6th ed.). Morgan Kaufmann.",
+            "RFCs: RFC 791 (IPv4), RFC 792 (ICMP), RFC 826 (ARP), RFC 4632 (CIDR), RFC 8200 (IPv6), RFC 2328 (OSPF), RFC 4271 (BGP). Normas IEEE 802.3, IEEE 802.1Q, IEEE 802.11."
+          ],
+          tools: "Wireshark, utilitários TCP/IP de diagnóstico (ping, traceroute, nslookup, arp, netstat, ipconfig/ifconfig/ip)."
+        }
+      },
+
+      POO: {
+        id: "POO",
+        code: "21093",
+        name: "Prog. por Objetos",
+        fullName: "Programação por Objetos (2026/2027)",
+        color: "var(--color-poo)",
+        colorBg: "var(--color-poo-bg)",
+        badgeClass: "badge-poo",
+        prof: "Leonel Morgado & Inês Domingues",
+        year: "2026/2027",
+        presentation: `Visa proporcionar conhecimentos e práticas fundamentais de POO em Python. Combina estudo guiado, feedback assistido por inteligência artificial (Grimório de Interpelações, GPT Socrático e Aristotélico-Estoico) e ciclos curtos de conceção, implementação, teste, feedback e síntese no projeto do semestre desenvolvido no PyCharm Community Edition. Culmina na Atividade Sumativa 4 síncrona no WISEflow a 11/01/2027 às 16:00.`,
+        learningOutcomes: [
+          { id: "RA1", title: "Conceitos Fundamentais em Python", desc: "Distinguir classe, objeto, instância, estado, comportamento, identidade, abstração, encapsulamento, responsabilidade, construtor, atributos e métodos." },
+          { id: "RA2", title: "Modelação Orientada a Objetos", desc: "Modelar problemas a partir de narrativas, user stories, storyboards, mockups e diagramas UML." },
+          { id: "RA3", title: "Implementação em Python & IDE", desc: "Implementar pequenos projetos em Python usando classes, construtores e o ambiente PyCharm recomendado." },
+          { id: "RA4", title: "Herança, Composição & Polimorfismo", desc: "Aplicar herança simples/múltipla, composição, mixins, duck typing, protocolos e ABCs, justificando os princípios SOLID (OCP, LSP)." },
+          { id: "RA5", title: "Testes, Depuração & Refatorização", desc: "Testar, depurar e refatorizar implementações quanto a robustez, modularidade e acoplamento." },
+          { id: "RA6", title: "Documentação & Uso Crítico de IA", desc: "Documentar decisões e justificar o uso crítico de LLMs como apoio ao pensamento e revisão." }
+        ],
+        competences: [
+          "C1: Analisar, modelar e especificar problemas complexos.",
+          "C2: Conceber, desenhar e projetar soluções informáticas.",
+          "C3: Desenvolver aplicações utilizando as técnicas mais adequadas.",
+          "C4: Validar e testar implementações para garantir robustez e manutenibilidade."
+        ],
+        methodology: `Desenvolvimento contínuo em ciclos curtos no IDE PyCharm Community Edition. Apoio ao pensamento através do Grimório de Interpelações e GPTs especializados. Sínteses avaliadas por rubricas rigorosas.`,
+        approvalRules: {
+          regime: "Regime exclusivo de Avaliação Contínua (Tipologia 1).",
+          weights: "3 Atividades Assíncronas (8 valores) + 1 Atividade Síncrona Final (12 valores) = 20 valores.",
+          breakdown: [
+            "Síntese Final do Tópico 3 (AF3.1 e AF3.2): 2 valores (10%) [Realização 05/10 a 18/10; Fecho às 9h00 de segunda-feira, 19/10/2026]",
+            "Síntese Final do Tópico 4 (AF4.1 e AF4.2 - SOLID e Testes): 3 valores (15%) [Realização 19/10 a 08/11; Fecho às 9h00 de segunda-feira, 09/11/2026]",
+            "Síntese Final do Tópico 5 (AF5.1 e AF5.2 - Polimorfismo e ABC): 3 valores (15%) [Realização 09/11 a 22/11; Fecho às 9h00 de segunda-feira, 23/11/2026]",
+            "Atividade Sumativa 4 (Síncrona em WISEflow): 12 valores (60%) [Realização oficial a 11/01/2027 às 16:00]"
+          ],
+          criteria: [
+            "Realizar todas as atividades de avaliação sumativa.",
+            "Obter no somatório das atividades assíncronas aproveitamento mínimo de 50% (mínimo de 4.0 em 8.0 valores).",
+            "Obter na atividade síncrona WISEflow aproveitamento mínimo de 50% (mínimo de 6.0 em 12.0 valores).",
+            "Obter classificação final igual ou superior a 10 valores.",
+            "Possui Cartão de Aprendizagem individual na PlataformAbERTA."
+          ]
+        },
+        bibliography: {
+          mandatory: [
+            "Documentação Oficial Python 3: https://docs.python.org/pt-br/3/",
+            "Pedro Guerreiro - Apontamentos de Programação Orientada por Objetos (v1895, 2025), Dep. Matemática, FCT, Univ. Coimbra."
+          ],
+          complementary: [
+            "Ernesto Costa - Programação em Python: Fundamentos e Resolução de Problemas. FCA Editora.",
+            "Allen B. Downey - Pense em Python, 2.ª ed. Novatec / O'Reilly."
+          ],
+          tools: "IDE PyCharm Community Edition, Grimório de Interpelações a LLMs, ferramentas UML."
+        }
+      },
+
+      LC: {
+        id: "LC",
+        code: "21078",
+        name: "Ling. Computação",
+        fullName: "Linguagens e Computação (2026-2027)",
+        color: "var(--color-lc)",
+        colorBg: "var(--color-lc-bg)",
+        badgeClass: "badge-lc",
+        prof: "Jorge Morais",
+        year: "2026-2027",
+        presentation: `A relação entre linguagens formais e computação. Abrange autómatos finitos, expressões regulares, gramáticas independentes de contexto, autómatos de pilha e Máquinas de Turing, abordando decidibilidade e complexidade computacional (P vs NP). Utiliza o simulador online UAbALL.`,
+        learningOutcomes: [
+          { id: "RA1", title: "Conceitos Teóricos Fundamentais", desc: "Compreender e aplicar conceitos de linguagem, alfabeto, fecho de Kleene, monoide livre, autómatos, regex, gramáticas e MT." },
+          { id: "RA2", title: "Tipos de Linguagens & Formalismos", desc: "Identificar linguagens regulares e independentes de contexto, convertendo expressões em DFA e explorando PDA." },
+          { id: "RA3", title: "Modelação e Simulação UAbALL", desc: "Resolver problemas formais através de modelação e simulação direta na ferramenta UAbALL." },
+          { id: "RA4", title: "Eficácia e Eficiência", desc: "Analisar soluções considerando determinismo vs não determinismo, estado de poço (trap) e ambiguidade." },
+          { id: "RA5", title: "Máquinas de Turing", desc: "Estabelecer relações entre algoritmos e a sua representação formal com MT." },
+          { id: "RA6", title: "Decidibilidade e Complexidade", desc: "Distinguir problemas decidíveis de indecidíveis e classes de complexidade polinomial e exponencial." }
+        ],
+        competences: [
+          "C1: Analisar, modelar e especificar problemas complexos.",
+          "C3: Desenvolver aplicações utilizando modelos formais rigorosos.",
+          "C4: Testar, validar e comparar eficácia de modelos computacionais.",
+          "C9: Integrar ferramentas de matemática e engenharia na resolução de desafios."
+        ],
+        methodology: `Combina estudo do manual Hopcroft et al., lições obrigatórias de escolha múltipla (1 valor) e trabalhos individuais práticos com o simulador UAbALL (4 valores). O acesso ao trabalho seguinte exige a entrega do anterior.`,
+        approvalRules: {
+          regime: "Regime exclusivo de Avaliação Contínua (Tipologia 3).",
+          weights: "4 Atividades Sumativas Assíncronas de 5 valores cada (Lição 1v + Trabalho 4v) = 20 valores.",
+          breakdown: [
+            "Atividade Sumativa 1 (Lição Autómatos Finitos [28/09 a 19/10, 1v] + Trabalho 1 [07/10 a 19/10 23:59, 4v]): 5 valores",
+            "Atividade Sumativa 2 (Lição Expressões Regulares [19/10 a 09/11, 1v] + Trabalho 2 [28/10 a 09/11 23:59, 4v]): 5 valores",
+            "Atividade Sumativa 3 (Lição Gramáticas e Pilha [09/11 a 30/11, 1v] + Trabalho 3 [18/11 a 30/11 23:59, 4v]): 5 valores",
+            "Atividade Sumativa 4 (Lição Máquinas de Turing [30/11 a 21/12, 1v] + Trabalho 4 [09/12 a 21/12 23:59, 4v]): 5 valores"
+          ],
+          criteria: [
+            "Realizar todas as atividades de avaliação sumativa.",
+            "Obter aproveitamento mínimo de 40% (2.0 em 5.0 valores) em pelo menos N-1 (3 das 4) atividades sumativas.",
+            "Obter classificação final igual ou superior a 10 valores.",
+            "REGRA DE DEPENDÊNCIA EM CADEIA: Só terá acesso e poderá entregar o trabalho subsequente se tiver entregue o anterior!",
+            "Época de Recurso: Atividade síncrona (teste ou discussão online) cotada para 20 valores."
+          ]
+        },
+        bibliography: {
+          mandatory: [
+            "Hopcroft, J. E., Motwani, R., & Ullman, J. D. Introduction to Automata Theory, Languages and Computation (3rd ed.). Addison-Wesley."
+          ],
+          complementary: [
+            "Textos e vídeos disponibilizados pelo professor na sala de aula virtual."
+          ],
+          tools: "UAbALL - Automata Learning Lab (ferramenta web de simulação)."
+        }
+      },
+
+      FBD: {
+        id: "FBD",
+        code: "21053",
+        name: "Fund. Bases de Dados",
+        fullName: "Fundamentos de Bases de Dados (2026-2027)",
+        color: "var(--color-fbd)",
+        colorBg: "var(--color-fbd-bg)",
+        badgeClass: "badge-fbd",
+        prof: "Paulo Miguel Ciríaco Pinheiro Pombinho de Matos",
+        year: "2026-2027",
+        presentation: `Introduz os conceitos, modelos e técnicas fundamentais associados a bases de dados relacionais. Abrange fundamentos de SGBD, formulação avançada de consultas em SQL, formalização em álgebra relacional, modelação Entidade-Relacionamento, normalização e implementação física com integridade referencial.`,
+        learningOutcomes: [
+          { id: "RA1", title: "Fundamentos & Arquitetura SGBD", desc: "Distinguir dados, informação, SGBD, modelo, esquema, instância e arquitetura geral." },
+          { id: "RA2", title: "Interpretação de Esquemas Relacionais", desc: "Identificar relações, atributos, domínios, chaves primárias e estrangeiras e integridade referencial." },
+          { id: "RA3", title: "Consultas SQL", desc: "Formular consultas com seleção, projeção, junções, agregação (GROUP BY, HAVING) e subconsultas." },
+          { id: "RA4", title: "Álgebra Relacional", desc: "Representar consultas formalmente em álgebra relacional e estabelecer equivalências semânticas com SQL." },
+          { id: "RA5", title: "Modelação ER", desc: "Modelar requisitos através de diagramas ER e transformá-los num esquema relacional consistente." },
+          { id: "RA6", title: "Implementação SQL", desc: "Construir e testar scripts DDL/DML de definição e validação sobre SGBD relacional." },
+          { id: "RA7", title: "Avaliação Crítica & Uso de IA", desc: "Avaliar criticamente soluções de bases de dados, detetando erros em sugestões geradas por IA." }
+        ],
+        competences: [
+          "C1: Analisar, modelar e especificar requisitos complexos de informação.",
+          "C2: Conceber e projetar estruturas e esquemas relacionais normalizados.",
+          "C3: Desenvolver e implementar scripts de bases de dados com fiabilidade e integridade."
+        ],
+        methodology: `Progressão estruturada pelas 6 secções: fundamentos -> consultas SQL -> álgebra relacional -> modelação ER e normalização. Os scripts SQL submetidos devem ser executáveis e testados.`,
+        approvalRules: {
+          regime: "Regime exclusivo de Avaliação Contínua (Tipologia 3).",
+          weights: "4 Atividades Sumativas Assíncronas de 5 valores cada = 20 valores.",
+          breakdown: [
+            "Atividade Sumativa 1 (Secção 1 - Fundamentos e Modelo Relacional): 5 valores [Disponibilização 05/10/2026; Entrega 18/10/2026]",
+            "Atividade Sumativa 2 (Secções 2-3 - SQL Fundamental e Intermédio): 5 valores [Disponibilização 26/10/2026; Entrega 08/11/2026]",
+            "Atividade Sumativa 3 (Secção 4 - Álgebra Relacional e Validação Crítica): 5 valores [Disponibilização 16/11/2026; Entrega 29/11/2026]",
+            "Atividade Sumativa 4 (Secções 5-6 - Modelação e Implementação): 5 valores [Disponibilização 07/12/2026; Entrega 20/12/2026]"
+          ],
+          criteria: [
+            "Submeter obrigatoriamente todas as 4 atividades sumativas para apreciação.",
+            "Obter no somatório das atividades assíncronas aproveitamento mínimo de 40% (mínimo de 8.0 em 20.0 valores).",
+            "Obter classificação final igual ou superior a 10 valores.",
+            "REGRA DE BLOQUEIO SEQUENCIAL: Se não submeter uma das atividades, não poderá aceder nem submeter a seguinte!",
+            "Época de Recurso: Prova síncrona (teste ou discussão online) cotada para 20 valores."
+          ]
+        },
+        bibliography: {
+          mandatory: [
+            "Silberschatz, A., Korth, H. F., & Sudarshan, S. (2020). Database System Concepts (7th ed.). McGraw-Hill (Caps 1 a 7 e Cap. 27 online)."
+          ],
+          complementary: [
+            "Gouveia, F. (2014). Fundamentos de Bases de Dados. FCA - Editora de Informática.",
+            "Maier, D. (1983). The Theory of Relational Databases. Computer Science Press."
+          ],
+          tools: "SGBD Relacional (PostgreSQL / SQLite / MySQL / MariaDB) e bases de dados didáticas."
+        }
+      },
+
+      FG: {
+        id: "FG",
+        code: "21048",
+        name: "Física Geral",
+        fullName: "Física Geral (2026/2027)",
+        color: "var(--color-fg)",
+        colorBg: "var(--color-fg-bg)",
+        badgeClass: "badge-fg",
+        prof: "Nuno Sousa",
+        year: "2026/2027",
+        presentation: `Proporciona uma formação de base em mecânica clássica analítica (Parte I) e na modelação e simulação computacional de problemas físicos através de métodos numéricos (Parte II). Estabelece uma ponte direta entre conceitos físicos fundamentais e a sua implementação algorítmica.`,
+        learningOutcomes: [
+          { id: "RA1", title: "Fundamentos de Mecânica Clássica", desc: "Compreensão de cinemática, leis de Newton, trabalho, energia e dinâmica de partículas." },
+          { id: "RA2", title: "Análise Crítica & Análise Matemática", desc: "Identificar conceitos em situações concretas e aplicar ferramentas de cálculo diferencial e integral." },
+          { id: "RA3", title: "Modelação de Problemas Concretos", desc: "Transformar enunciados físicos em expressões matemáticas, resolvendo-as analiticamente." },
+          { id: "RA4", title: "Resolução Numérica no Computador", desc: "Programar e utilizar algoritmos numéricos para resolver equações diferenciais sem solução analítica simples." },
+          { id: "RA5", title: "Discussão e Trabalho Colaborativo", desc: "Discutir criticamente resultados, algoritmos e testes formativos nos fóruns da disciplina." }
+        ],
+        competences: [
+          "C1: Analisar, modelar e especificar problemas complexos da física.",
+          "C2: Conceber e desenhar soluções informáticas para simulação mecânica.",
+          "C9: Integrar ferramentas de física, matemática e engenharia na resolução de desafios."
+        ],
+        methodology: `Parte I (Semanas 1-8): Estudo de conteúdos -> exercícios resolvidos -> testes formativos semanais Moodle -> consolidação. Parte II (Semanas 10-13): Leitura de métodos numéricos (Chapra) -> programação de algoritmos -> aplicação a novos sistemas físicos.`,
+        approvalRules: {
+          regime: "Opção entre Avaliação Contínua (Tipologia 1) ou Exame Final (escolha nas 3 primeiras semanas).",
+          weights: "Avaliação Contínua: 2 Atividades Assíncronas (8 valores) + 1 Atividade Síncrona Final (12 valores) = 20 valores.",
+          breakdown: [
+            "Atividade Sumativa 1 - Mecânica Clássica: 3 valores (15%) [Disponível 06/11/2026 até às 23:55; Entrega 16/11/2026 às 23:55]",
+            "Atividade Sumativa 2 - Uso de Computadores: 5 valores (25%) [Disponível 11/12/2026 até às 23:55; Entrega 21/12/2026 às 23:55]",
+            "Atividade Sumativa 3 - Prova Síncrona WISEflow: 12 valores (60%) [Realização a 18/01/2027 com início às 10:00]"
+          ],
+          criteria: [
+            "Realizar todas as atividades de avaliação sumativa contínua.",
+            "Obter no somatório das atividades assíncronas aproveitamento mínimo de 50% (mínimo de 4.0 em 8.0 valores).",
+            "Obter na atividade síncrona final aproveitamento mínimo de 50% (mínimo de 6.0 em 12.0 valores).",
+            "Obter classificação final igual ou superior a 10 valores.",
+            "Regime de Exame Final Alternativo: Prova única no WISEflow classificada de 0 a 20 valores (aprovação com nota >= 9.5 valores)."
+          ]
+        },
+        bibliography: {
+          mandatory: [
+            "Halliday, D., Resnick, R., & Walker, J. Fundamentos de Física, Vol. 1 (Editora LTC).",
+            "Chapra, S. C., & Canale, R. P. Métodos Numéricos para Engenharia (Editora McGraw Hill, Caps 1, 25.1 e 25.2)."
+          ],
+          complementary: [
+            "Qualquer manual universitário de Física Geral (Tipler, Serway, etc.).",
+            "Textos de apoio e vídeos preparados pelo professor Nuno Sousa."
+          ],
+          tools: "Linguagem de programação (Python, C/C++) para simulação numérica de equações do movimento."
+        }
+      }
+    };
+
+    /* MAPEAMENTO BIDIRECIONAL ENTRE ROTEIRO E ENTREGAS */
+    const TASK_DELIVERY_MAP = {
+      "W5_SR": "DELIV_SR_1",
+      "W13_SR": "DELIV_SR_2",
+      "W14_SR": "DELIV_SR_4A",
+      "W16_SR_DEV": "DELIV_SR_4A",
+      "W16_SR_SYNC": "DELIV_SR_4B",
+      "W4_POO": "DELIV_POO_1",
+      "W7_POO": "DELIV_POO_2",
+      "W10_POO": "DELIV_POO_3",
+      "W15_POO": "DELIV_POO_4",
+      "W4_LC": "DELIV_LC_1",
+      "W7_LC": "DELIV_LC_2",
+      "W10_LC": "DELIV_LC_3",
+      "W13_LC": "DELIV_LC_4",
+      "W4_FBD": "DELIV_FBD_1",
+      "W7_FBD": "DELIV_FBD_2",
+      "W10_FBD": "DELIV_FBD_3",
+      "W13_FBD": "DELIV_FBD_4",
+      "W8_FG": "DELIV_FG_1",
+      "W13_FG": "DELIV_FG_2",
+      "W16_FG": "DELIV_FG_3"
+    };
+
+    const DELIVERY_TASK_MAP = {};
+    for (const [taskId, delivId] of Object.entries(TASK_DELIVERY_MAP)) {
+      if (!DELIVERY_TASK_MAP[delivId]) {
+        DELIVERY_TASK_MAP[delivId] = [];
+      }
+      DELIVERY_TASK_MAP[delivId].push(taskId);
+    }
+
+    /* TABELA CONSOLIDADA DE AVALIAÇÕES */
+    const DELIVERIES_DATA = [
+      {
+        id: "DELIV_SR_1",
+        uc: "SR",
+        name: "Atividade Sumativa 1 - Trabalho 1 (Aplicações, Arquitetura e Transporte)",
+        type: "Assíncrona",
+        start: "2026-10-19",
+        deadline: "2026-10-25T23:59",
+        weight: 3.0,
+        inCalendar: true,
+        desc: "Trabalho individual sobre Módulos 1 e 2. Disponível a 19/10/2026; entrega até 25/10/2026 às 23:59."
+      },
+      {
+        id: "DELIV_SR_2",
+        uc: "SR",
+        name: "Atividade Sumativa 2 - Trabalho 2 (Interligação e Redes LAN)",
+        type: "Assíncrona",
+        start: "2026-12-16",
+        deadline: "2026-12-21T23:59",
+        weight: 3.0,
+        inCalendar: true,
+        desc: "Trabalho individual sobre Módulos 3 e 4. Disponível a 16/12/2026; entrega até 21/12/2026 às 23:59."
+      },
+      {
+        id: "DELIV_SR_3",
+        uc: "SR",
+        name: "Atividade Sumativa 3 - Síntese da Participação (Módulos 1 a 4)",
+        type: "Assíncrona",
+        start: "2026-09-14",
+        deadline: "2027-01-04T23:59",
+        weight: 2.0,
+        inCalendar: false,
+        desc: "Reflexão contínua sobre a aprendizagem (0.5v em cada um dos 4 módulos) ao longo de todo o percurso."
+      },
+      {
+        id: "DELIV_SR_4A",
+        uc: "SR",
+        name: "Atividade Sumativa 4 - Projeto Global de Redes (1.ª Parte: Desenvolvimento)",
+        type: "Assíncrona",
+        start: "2027-01-04",
+        deadline: "2027-01-24T23:59",
+        weight: 4.0,
+        inCalendar: true,
+        desc: "Desenvolvimento do Projeto Global de Redes com início a 04/01 e submissão na plataforma até à véspera da prova síncrona."
+      },
+      {
+        id: "DELIV_SR_4B",
+        uc: "SR",
+        name: "Atividade Sumativa 4 - Projeto Final (2.ª Parte: Validação Síncrona no Wiseflow)",
+        type: "Síncrona",
+        start: "2027-01-25",
+        deadline: "2027-01-25T16:00",
+        weight: 8.0,
+        inCalendar: true,
+        desc: "Prova e validação científica síncrona no Wiseflow: 25/01/2027 às 16:00."
+      },
+      {
+        id: "DELIV_POO_1",
+        uc: "POO",
+        name: "Síntese Final do Tópico 3 (AF3.1 e AF3.2)",
+        type: "Assíncrona",
+        start: "2026-10-05",
+        deadline: "2026-10-19T09:00",
+        weight: 2.0,
+        inCalendar: true,
+        desc: "Ideia de projeto, micronarrativa, mockups, diagrama de classes e primeiros protótipos. Realização de 05/10 a 18/10; fecho às 9h00 de 19/10."
+      },
+      {
+        id: "DELIV_POO_2",
+        uc: "POO",
+        name: "Síntese Final do Tópico 4 (AF4.1 e AF4.2)",
+        type: "Assíncrona",
+        start: "2026-10-19",
+        deadline: "2026-11-09T09:00",
+        weight: 3.0,
+        inCalendar: true,
+        desc: "Herança, composição, princípios OCP e LSP, suites de testes unitários. Realização de 19/10 a 08/11; fecho às 9h00 de 09/11."
+      },
+      {
+        id: "DELIV_POO_3",
+        uc: "POO",
+        name: "Síntese Final do Tópico 5 (AF5.1 e AF5.2)",
+        type: "Assíncrona",
+        start: "2026-11-09",
+        deadline: "2026-11-23T09:00",
+        weight: 3.0,
+        inCalendar: true,
+        desc: "Polimorfismo, duck typing, classes-base abstratas (ABC) e testes. Realização de 09/11 a 22/11; fecho às 9h00 de 23/11."
+      },
+      {
+        id: "DELIV_POO_4",
+        uc: "POO",
+        name: "Atividade Sumativa 4 (Prova Síncrona no WISEflow)",
+        type: "Síncrona",
+        start: "2027-01-11",
+        deadline: "2027-01-11T16:00",
+        weight: 12.0,
+        inCalendar: true,
+        desc: "Atividade síncrona em WISEflow incidente sobre a globalidade da UC e articulada com o projeto individual: 11/01/2027 às 16:00."
+      },
+      {
+        id: "DELIV_LC_1",
+        uc: "LC",
+        name: "Atividade Sumativa 1 - Autómatos Finitos (Lição 1v + Trabalho 1 4v)",
+        type: "Assíncrona",
+        start: "2026-09-28",
+        deadline: "2026-10-19T23:59",
+        weight: 5.0,
+        inCalendar: true,
+        desc: "Lição (28/09 a 19/10, 1v) + Trabalho 1 (enunciado a 07/10 ou 08/10, entrega até 19/10 às 23:59, 4v) com modelação no UAbALL."
+      },
+      {
+        id: "DELIV_LC_2",
+        uc: "LC",
+        name: "Atividade Sumativa 2 - Expressões Regulares (Lição 1v + Trabalho 2 4v)",
+        type: "Assíncrona",
+        start: "2026-10-19",
+        deadline: "2026-11-09T23:59",
+        weight: 5.0,
+        inCalendar: true,
+        desc: "Lição (19/10 a 09/11, 1v) + Trabalho 2 (enunciado a 28/10, entrega até 09/11 às 23:59, 4v) com conversão e testes no UAbALL."
+      },
+      {
+        id: "DELIV_LC_3",
+        uc: "LC",
+        name: "Atividade Sumativa 3 - Gramáticas e Autómatos de Pilha (Lição 1v + Trabalho 3 4v)",
+        type: "Assíncrona",
+        start: "2026-11-09",
+        deadline: "2026-11-30T23:59",
+        weight: 5.0,
+        inCalendar: true,
+        desc: "Lição (09/11 a 30/11, 1v) + Trabalho 3 (enunciado a 18/11, entrega até 30/11 às 23:59, 4v) sobre CFG e PDA."
+      },
+      {
+        id: "DELIV_LC_4",
+        uc: "LC",
+        name: "Atividade Sumativa 4 - Máquinas de Turing (Lição 1v + Trabalho 4 4v)",
+        type: "Assíncrona",
+        start: "2026-11-30",
+        deadline: "2026-12-21T23:59",
+        weight: 5.0,
+        inCalendar: true,
+        desc: "Lição (30/11 a 21/12, 1v) + Trabalho 4 (enunciado a 09/12, entrega até 21/12 às 23:59, 4v) sobre MT e complexidade no UAbALL."
+      },
+      {
+        id: "DELIV_FBD_1",
+        uc: "FBD",
+        name: "Atividade Sumativa 1 (Secção 1 - Fundamentos e modelo relacional)",
+        type: "Assíncrona",
+        start: "2026-10-05",
+        deadline: "2026-10-18T23:59",
+        weight: 5.0,
+        inCalendar: true,
+        desc: "Conceitos fundamentais e interpretação de esquema relacional. Enunciado disponibilizado a 05/10/2026; entrega até 18/10/2026."
+      },
+      {
+        id: "DELIV_FBD_2",
+        uc: "FBD",
+        name: "Atividade Sumativa 2 (Secções 2-3 - SQL fundamental e intermédio)",
+        type: "Assíncrona",
+        start: "2026-10-26",
+        deadline: "2026-11-08T23:59",
+        weight: 5.0,
+        inCalendar: true,
+        desc: "Formulação, execução, teste e justificação de consultas SQL. Enunciado a 26/10/2026; entrega até 08/11/2026."
+      },
+      {
+        id: "DELIV_FBD_3",
+        uc: "FBD",
+        name: "Atividade Sumativa 3 (Secção 4 - Álgebra relacional e validação crítica)",
+        type: "Assíncrona",
+        start: "2026-11-16",
+        deadline: "2026-11-29T23:59",
+        weight: 5.0,
+        inCalendar: true,
+        desc: "Representação formal em álgebra relacional e comparação com SQL. Enunciado a 16/11/2026; entrega até 29/11/2026."
+      },
+      {
+        id: "DELIV_FBD_4",
+        uc: "FBD",
+        name: "Atividade Sumativa 4 (Secções 5-6 - Modelação e implementação)",
+        type: "Assíncrona",
+        start: "2026-12-07",
+        deadline: "2026-12-20T23:59",
+        weight: 5.0,
+        inCalendar: true,
+        desc: "Construção de modelo ER, transformação relacional e scripts SQL executáveis. Enunciado a 07/12/2026; entrega até 20/12/2026."
+      },
+      {
+        id: "DELIV_FG_1",
+        uc: "FG",
+        name: "Atividade Sumativa 1 - Mecânica Clássica",
+        type: "Assíncrona",
+        start: "2026-11-06",
+        deadline: "2026-11-16T23:55",
+        weight: 3.0,
+        inCalendar: true,
+        desc: "Avaliação sumativa individual e assíncrona sobre mecânica clássica. Enunciado a 06/11/2026 até às 23:55; entrega até 16/11/2026 às 23:55."
+      },
+      {
+        id: "DELIV_FG_2",
+        uc: "FG",
+        name: "Atividade Sumativa 2 - Uso de Computadores",
+        type: "Assíncrona",
+        start: "2026-12-11",
+        deadline: "2026-12-21T23:55",
+        weight: 5.0,
+        inCalendar: true,
+        desc: "Avaliação sumativa de métodos computacionais aplicados à física. Enunciado a 11/12/2026 até às 23:55; entrega até 21/12/2026 às 23:55."
+      },
+      {
+        id: "DELIV_FG_3",
+        uc: "FG",
+        name: "Atividade Sumativa 3 - Avaliação Sumativa Síncrona no Wiseflow",
+        type: "Síncrona",
+        start: "2027-01-18",
+        deadline: "2027-01-18T10:00",
+        weight: 12.0,
+        inCalendar: true,
+        desc: "Prova síncrona no Wiseflow abrangendo toda a matéria. Data e hora oficiais: 18/01/2027 com início às 10:00."
+      }
+    ];
+
+    /* ROTEIRO SEMANAL COMPLETO (16 SEMANAS) */
+    const WEEKS_DATA = [
+      {
+        weekNum: 0,
+        title: "Ambientação, Integração e Decisão de Regime",
+        start: "2026-09-14",
+        end: "2026-09-20",
+        tasks: [
+          { id: "W0_SR", uc: "SR", title: "Temática 0: Ambientação & Integração", desc: "Explorar sala virtual, vídeo de apresentação, fórum 'Conheça o tutor' e leitura atenta do PUC.", tags: ["PlataformAbERTA", "Fórum Acolhimento", "Leitura PUC"], highlight: "📅 Ambientação de 14/09 a 18/09", highlightType: "normal" },
+          { id: "W0_POO", uc: "POO", title: "Tema 1: Ambiente de Desenvolvimento Python", desc: "Instalação do PyCharm Community Edition, ambientação à linguagem e Grimório de Interpelações a LLMs.", tags: ["PyCharm IDE", "Setup Python", "LLMs Grimório"], highlight: "📅 Ambientação de 14/09 a 18/09", highlightType: "normal" },
+          { id: "W0_LC", uc: "LC", title: "Atividade 0: Ambientação e Integração na UC", desc: "Leitura do PUC, vídeo introdutório, fóruns 'Dúvidas sobre o PUC' e 'Conheça o tutor', checklist final.", tags: ["Apresentação", "Checklist", "UAbALL Setup"], highlight: "📅 Ambientação de 14/09 a 20/09", highlightType: "normal" },
+          { id: "W0_FBD", uc: "FBD", title: "Atividade de Integração: Ambientação e Leitura do PUC", desc: "Acolhimento na plataforma, estudo do percurso de aprendizagem e regras sequenciais de entrega.", tags: ["Acolhimento", "Regras PUC", "Guia Estudo"], highlight: "📅 Ambientação de 14/09 a 20/09", highlightType: "normal" },
+          { id: "W0_FG", uc: "FG", title: "Atividade 1 (Sem. 1-7): Início Mecânica Clássica & Decisão", desc: "Abertura da disciplina. Decisão sobre regime de avaliação contínua vs exame nas 3 primeiras semanas.", tags: ["Mecânica I", "Moodle", "Opção Regime"], highlight: "⚙️ Decisão de Regime nas 3 primeiras semanas", highlightType: "normal" }
+        ]
+      },
+      {
+        weekNum: 1,
+        title: "Início das Temáticas Principais",
+        start: "2026-09-21",
+        end: "2026-09-27",
+        tasks: [
+          { id: "W1_SR", uc: "SR", title: "Temática 1: Aplicações e Arquiteturas de Rede", desc: "Kurose Caps 1 e 2; modelos OSI e TCP/IP, cliente-servidor e P2P; início do Lab 1 Wireshark em pares.", tags: ["Kurose Cap 1-2", "Wireshark Lab", "OSI & TCP/IP"], highlight: "🔍 Foco: Wireshark HTTP & DNS (em pares)", highlightType: "normal" },
+          { id: "W1_POO", uc: "POO", title: "Tema 2: Limites da Programação Imperativa-Procedimental", desc: "Pequenos programas em Python sem OO e identificação de problemas que a OO resolve.", tags: ["Python Base", "Procedimental vs OO", "Análise Crítica"], highlight: "💡 Reflexão: Limitações do paradigma imperativo", highlightType: "normal" },
+          { id: "W1_LC", uc: "LC", title: "Atividade 1: Conceitos Fundamentais das Linguagens Formais", desc: "Hopcroft Cap. 1 (1.2 a 1.4); fecho de Kleene, monoide livre, alfabetos e Atividade Formativa 1.", tags: ["Hopcroft Cap 1", "Kleene Star", "Formativa 1"], highlight: "📌 Realização individual da Atividade Formativa 1", highlightType: "normal" },
+          { id: "W1_FBD", uc: "FBD", title: "AF1: Introdução aos Sistemas de Bases de Dados (Secção 1)", desc: "Silberschatz Cap. 1; conceitos de dados, informação, arquitetura de SGBD e independência lógica/física.", tags: ["Silberschatz Cap 1", "Arquitetura SGBD", "Independência Dados"], highlight: "📖 Estudo conceptual da Secção 1", highlightType: "normal" },
+          { id: "W1_FG", uc: "FG", title: "Atividade 1: Cinemática Unidimensional", desc: "Halliday Vol. 1 Caps 1-2; estudo teórico, resolução de problemas e testes com feedback automático.", tags: ["Halliday Cap 1-2", "Cinemática 1D", "Testes Moodle"], highlight: "📝 Teste formativo semanal com feedback automático", highlightType: "normal" }
+        ]
+      },
+      {
+        weekNum: 2,
+        title: "Modelos Formais, Autómatos e Modelo Relacional",
+        start: "2026-09-28",
+        end: "2026-10-04",
+        tasks: [
+          { id: "W2_SR", uc: "SR", title: "Temática 1: Protocolos de Aplicação & Quiz Tema 1", desc: "Estudo de DNS, HTTP, SMTP; partilha do Lab Wireshark e realização do Quiz de Autoavaliação 1.", tags: ["DNS & HTTP", "Wireshark Análise", "Quiz Tema 1"], highlight: "🧪 Conclusão do Lab Wireshark Tema 1", highlightType: "normal" },
+          { id: "W2_SR_REFLEX", uc: "SR", title: "SR Módulo 1: Reflexão da Participação (0,5v)", desc: "Identificar uma atividade ou realização relevante de M1 e justificar no fórum/dispositivo da UC.", tags: ["Módulo 1", "Reflexão Própria", "Atividade Formativa"], highlight: "⭐ Checkpoint Formativo: 0,5 valores atribuídos", highlightType: "formativa" },
+          { id: "W2_POO", uc: "POO", title: "Tema 2: Dúvidas no Fórum e Preparação de Ideia", desc: "Discussão de arquiteturas de programas e preparação da micronarrativa para o projeto OO.", tags: ["Ideia Projeto", "User Stories", "Fórum Dúvidas"], highlight: "🎯 Definição do domínio do projeto individual", highlightType: "normal" },
+          { id: "W2_LC", uc: "LC", title: "Atividade 2: Autómatos Finitos (DFA / NFA) & UAbALL", desc: "Hopcroft Cap. 2. Abertura da Lição de Autómatos Finitos (100% obrigatória). Início da simulação no UAbALL.", tags: ["Hopcroft Cap 2", "UAbALL Lab", "Lição AF"], highlight: "🚀 Lição 1 aberta de 28/09 a 19/10 (1 valor)", highlightType: "normal" },
+          { id: "W2_FBD", uc: "FBD", title: "AF1: Modelo Relacional & Esquemas", desc: "Silberschatz Cap. 2; relações, atributos, domínios, chaves primárias e estrangeiras, integridade.", tags: ["Silberschatz Cap 2", "Chaves Primárias", "Integridade Ref."], highlight: "📊 Resolução de exercícios de esquemas relacionais", highlightType: "normal" },
+          { id: "W2_FG", uc: "FG", title: "Atividade 1: Vetores e Movimento Bidimensional", desc: "Halliday Caps 3-4; lançamento de projéteis e movimento circular em contexto de engenharia.", tags: ["Halliday Cap 3-4", "Vetores", "Movimento 2D"], highlight: "📝 Teste formativo semanal na plataforma", highlightType: "normal" }
+        ]
+      },
+      {
+        weekNum: 3,
+        title: "Abertura de Avaliações Sumativas",
+        start: "2026-10-05",
+        end: "2026-10-11",
+        tasks: [
+          { id: "W3_SR", uc: "SR", title: "Temática 2: Camada de Transporte (UDP e TCP)", desc: "Kurose Cap. 3; multiplexagem, controlo de fluxo e congestão; início do Guião Laboratorial 2 no Wireshark.", tags: ["Kurose Cap 3", "TCP vs UDP", "Wireshark Segments"], highlight: "🔬 Início do Guião Lab 2 de Transporte", highlightType: "normal" },
+          { id: "W3_POO", uc: "POO", title: "Tema 3: Início do Projeto do Semestre (AF3.1 e AF3.2)", desc: "Definição do projeto individual, user stories, mockups, diagrama UML e primeiros protótipos Python.", tags: ["UML Classes", "Mockups UI", "Protótipos Python"], highlight: "🛠️ Elaboração dos artefactos da Síntese 3", highlightType: "normal" },
+          { id: "W3_LC", uc: "LC", title: "Atividade 2: Abertura do Trabalho 1 (Autómatos)", desc: "Enunciado do Trabalho 1 disponibilizado a 07/10 (ou 08/10); simulação e verificação de DFA no UAbALL.", tags: ["Trabalho 1", "UAbALL Simulação", "DFA / NFA"], highlight: "📑 Enunciado Trabalho 1 disponível (4 valores)", highlightType: "normal" },
+          { id: "W3_FBD", uc: "FBD", title: "Atividade Sumativa 1: Disponibilização do Enunciado!", desc: "Abertura a 05/10/2026. Questões sobre fundamentos e interpretação de esquema relacional (5 valores).", tags: ["Sumativa 1", "Fundamentos BD", "Esquemas"], highlight: "🚨 🚨 Sumativa 1 Aberta (5v)", highlightType: "danger" },
+          { id: "W3_FG", uc: "FG", title: "Atividade 1: Leis de Newton & Dinâmica da Partícula", desc: "Halliday Cap. 5; diagramas de corpo livre e forças de contacto; testes semanais com feedback.", tags: ["Halliday Cap 5", "Leis de Newton", "Diagrama Forças"], highlight: "📝 Resolução colaborativa e teste semanal Moodle", highlightType: "normal" }
+        ]
+      },
+      {
+        weekNum: 4,
+        title: "Picos de Entrega: FBD Sumativa 1, POO Síntese 3 e LC T1",
+        start: "2026-10-12",
+        end: "2026-10-18",
+        tasks: [
+          { id: "W4_SR", uc: "SR", title: "Temática 2: Consolidação & Quiz Tema 2", desc: "Conclusão do Lab Wireshark da camada de transporte e resolução do Quiz de Autoavaliação Tema 2.", tags: ["TCP Handshake", "Wireshark Análise", "Quiz Tema 2"], highlight: "🧪 Finalização do Lab Wireshark Tema 2", highlightType: "normal" },
+          { id: "W4_SR_REFLEX", uc: "SR", title: "SR Módulo 2: Reflexão da Participação (0,5v)", desc: "Identificar uma atividade ou realização relevante de M2 e justificar no dispositivo da UC.", tags: ["Módulo 2", "Reflexão Transporte", "Atividade Formativa"], highlight: "⭐ Checkpoint Formativo: 0,5 valores atribuídos", highlightType: "formativa" },
+          { id: "W4_POO", uc: "POO", title: "Tema 3: Fecho da Síntese Final do Tópico 3", desc: "Entrega dos artefactos AF3.1 e AF3.2. Submissão fecha impreterivelmente às 9h00 de 19/10/2026!", tags: ["Síntese 3", "UML Final", "Protótipos PyCharm"], highlight: "🚨 🚨 Fecho: 19/10 às 09:00 (2v)", highlightType: "danger" },
+          { id: "W4_LC", uc: "LC", title: "Atividade 2: Entrega da Lição 1 e Trabalho 1", desc: "Data limite de entrega de ambos os componentes: 19/10/2026 às 23:59. Cotação: Lição 1v + Trabalho 4v = 5v.", tags: ["Lição 1 (1v)", "Trabalho 1 (4v)", "UAbALL Ficheiros"], highlight: "🚨 🚨 Fecho: 19/10 às 23:59 (5v)", highlightType: "danger" },
+          { id: "W4_FBD", uc: "FBD", title: "Atividade Sumativa 1: Data Limite de Entrega!", desc: "Submissão na plataforma até às 23:59 de 18/10/2026! Cotação: 5 valores.", tags: ["Sumativa 1", "Modelo Relacional", "Entrega Plataforma"], highlight: "🚨 🚨 Fecho: 18/10 às 23:59 (5v)", highlightType: "danger" },
+          { id: "W4_FG", uc: "FG", title: "Atividade 1: Forças de Atrito e Resistência de Fluidos", desc: "Halliday Cap. 6; atrito estático/cinético e velocidade terminal; trabalho colaborativo no fórum.", tags: ["Halliday Cap 6", "Atrito Dinâmico", "Velocidade Terminal"], highlight: "📝 Teste formativo Moodle de mecânica", highlightType: "normal" }
+        ]
+      },
+      {
+        weekNum: 5,
+        title: "SR Trabalho 1, SOLID em POO e Abertura de Regex",
+        start: "2026-10-19",
+        end: "2026-10-25",
+        tasks: [
+          { id: "W5_SR", uc: "SR", title: "Atividade Sumativa 1 - Trabalho 1 (Assíncrona)", desc: "Enunciado disponibilizado a 19/10/2026; entrega até 25/10/2026 às 23:59 (3 valores). Incide sobre M1 e M2.", tags: ["Trabalho 1", "Módulo 1 & 2", "Wireshark Evidências"], highlight: "🚨 🚨 Fecho: 25/10 às 23:59 (3v)", highlightType: "danger" },
+          { id: "W5_POO", uc: "POO", title: "Tema 4: Herança, Composição, SOLID e Testes", desc: "Início das atividades AF4.1 e AF4.2; princípios OCP e LSP, sobrescrita de métodos e suites de testes.", tags: ["Herança & Composição", "SOLID (OCP/LSP)", "Pytest / Unittest"], highlight: "🛠️ Arranque da Síntese do Tópico 4", highlightType: "normal" },
+          { id: "W5_LC", uc: "LC", title: "Atividade 3: Abertura da Lição Expressões Regulares", desc: "Hopcroft Cap. 3; Lição aberta de 19/10 a 09/11 (1 valor); relação entre linguagens regulares e regex.", tags: ["Hopcroft Cap 3", "RegEx Formal", "Lição 2"], highlight: "🚀 Lição 2 aberta de 19/10 a 09/11 (1 valor)", highlightType: "normal" },
+          { id: "W5_FBD", uc: "FBD", title: "AF2: Introdução ao SQL Fundamental", desc: "Silberschatz Cap. 3; comandos SELECT, FROM, WHERE, ORDER BY, junções e primeiras agregações.", tags: ["Silberschatz Cap 3", "SQL Queries", "JOIN & WHERE"], highlight: "💻 Prática sobre base de dados didática", highlightType: "normal" },
+          { id: "W5_FG", uc: "FG", title: "Atividade 1: Energia Cinética e Trabalho Mecânico", desc: "Halliday Cap. 7; teorema da energia cinética e análise do trabalho de forças variáveis.", tags: ["Halliday Cap 7", "Trabalho & Energia", "Teorema Trabalho-Energia"], highlight: "📝 Teste formativo e preparação de consolidação", highlightType: "normal" }
+        ]
+      },
+      {
+        weekNum: 6,
+        title: "Interligação de Redes, SQL Sumativa 2 e Regex",
+        start: "2026-10-26",
+        end: "2026-11-01",
+        tasks: [
+          { id: "W6_SR", uc: "SR", title: "Temática 3: Funções da Camada de Rede & IPv4", desc: "Kurose Caps 4 e 5; encaminhamento vs forwarding, datagrama IPv4, endereçamento CIDR e NAT.", tags: ["Kurose Cap 4-5", "IPv4 Datagram", "Subnetting CIDR"], highlight: "🌐 Resolução prática de exercícios de sub-redes", highlightType: "normal" },
+          { id: "W6_POO", uc: "POO", title: "Tema 4: Evolução do Projeto & Testes Unitários", desc: "Implementação de diagramas de classes evoluídos e escrita de testes unitários e de integração.", tags: ["UML Evoluído", "Testes Unitários", "Refactor OO"], highlight: "🧪 Desenvolvimento de testes e robustez de código", highlightType: "normal" },
+          { id: "W6_LC", uc: "LC", title: "Atividade 3: Abertura do Trabalho 2 (Regex)", desc: "Enunciado do Trabalho 2 disponibilizado a 28/10; conversão de expressões regulares para DFA no UAbALL.", tags: ["Trabalho 2", "RegEx para DFA", "UAbALL Simulação"], highlight: "📑 Enunciado Trabalho 2 disponível (4 valores)", highlightType: "normal" },
+          { id: "W6_FBD", uc: "FBD", title: "Atividade Sumativa 2: Disponibilização do Enunciado!", desc: "Abertura a 26/10/2026. Formulação e validação de consultas SQL com agregações e junções (5 valores).", tags: ["Sumativa 2", "SQL Intermédio", "GROUP BY & HAVING"], highlight: "🚨 🚨 Sumativa 2 Aberta (5v)", highlightType: "danger" },
+          { id: "W6_FG", uc: "FG", title: "Atividade 1: Energia Potencial e Conservação da Energia", desc: "Halliday Cap. 8; forças conservativas, cálculo de energia mecânica total e curvas de potencial.", tags: ["Halliday Cap 8", "Conservação Energia", "Mecânica Clássica"], highlight: "📝 Teste formativo semanal Moodle", highlightType: "normal" }
+        ]
+      },
+      {
+        weekNum: 7,
+        title: "Picos de Entrega: FBD Sumativa 2, POO Síntese 4, LC T2 e FG Sumativa 1",
+        start: "2026-11-02",
+        end: "2026-11-08",
+        tasks: [
+          { id: "W7_SR", uc: "SR", title: "Temática 3: Algoritmos de Encaminhamento & Lab Wireshark", desc: "Algoritmos Link-State e Distance-Vector (RIP, OSPF, BGP); mensagens ICMP, ARP, ping e traceroute.", tags: ["OSPF & BGP", "ICMP & ARP", "Wireshark Routing"], highlight: "🔬 Lab Wireshark Camada de Rede", highlightType: "normal" },
+          { id: "W7_POO", uc: "POO", title: "Tema 4: Fecho da Síntese Final do Tópico 4", desc: "Entrega do relatório OCP/LSP, código e testes. Prazo limite: 09/11/2026 às 9h00!", tags: ["Síntese 4", "Relatório SOLID", "Testes Unitários"], highlight: "🚨 🚨 Fecho: 09/11 às 09:00 (3v)", highlightType: "danger" },
+          { id: "W7_LC", uc: "LC", title: "Atividade 3: Entrega da Lição 2 e Trabalho 2", desc: "Data limite de entrega: 09/11/2026 às 23:59. Lição (1v) + Trabalho 2 (4v) = 5 valores.", tags: ["Lição 2 (1v)", "Trabalho 2 (4v)", "UAbALL Regex"], highlight: "🚨 🚨 Fecho: 09/11 às 23:59 (5v)", highlightType: "danger" },
+          { id: "W7_FBD", uc: "FBD", title: "Atividade Sumativa 2: Data Limite de Entrega!", desc: "Submissão até às 23:59 de 08/11/2026! Consultas SQL intermédias sobre BD didática (5 valores).", tags: ["Sumativa 2", "SQL Queries", "Subconsultas"], highlight: "🚨 🚨 Fecho: 08/11 às 23:59 (5v)", highlightType: "danger" },
+          { id: "W7_FG", uc: "FG", title: "Atividade Sumativa 1: Disponibilização do Enunciado!", desc: "Enunciado disponibilizado a 06/11/2026 até às 23:55. Mecânica Clássica analítica (3 valores).", tags: ["Sumativa 1", "Mecânica Analítica", "Leis da Dinâmica"], highlight: "🚨 🚨 Sumativa 1 Aberta (3v)", highlightType: "danger" }
+        ]
+      },
+      {
+        weekNum: 8,
+        title: "Polimorfismo em POO, Gramáticas em LC e Entrega FG Sumativa 1",
+        start: "2026-11-09",
+        end: "2026-11-15",
+        tasks: [
+          { id: "W8_SR", uc: "SR", title: "Temática 3: Conclusão & Quiz Tema 3", desc: "Transição do IPv4 para o IPv6; resolução dos exercícios de sub-redes e Quiz de Autoavaliação 3.", tags: ["Transição IPv6", "CIDR Prática", "Quiz Tema 3"], highlight: "🧪 Conclusão da Camada de Rede", highlightType: "normal" },
+          { id: "W8_SR_REFLEX", uc: "SR", title: "SR Módulo 3: Reflexão da Participação (0,5v)", desc: "Identificar uma atividade ou realização relevante de M3 e justificar no dispositivo da UC.", tags: ["Módulo 3", "Reflexão Encaminhamento", "Atividade Formativa"], highlight: "⭐ Checkpoint Formativo: 0,5 valores atribuídos", highlightType: "formativa" },
+          { id: "W8_POO", uc: "POO", title: "Tema 5: Polimorfismo, Duck Typing, ABC e Testes", desc: "Início das atividades AF5.1 e AF5.2; classes-base abstratas, protocolos informais e testes polimórficos.", tags: ["ABC Module", "Duck Typing", "Polimorfismo"], highlight: "🛠️ Início da Síntese do Tópico 5", highlightType: "normal" },
+          { id: "W8_LC", uc: "LC", title: "Atividade 4: Abertura da Lição Gramáticas e Pilha", desc: "Hopcroft Caps 5 e 6; Lição aberta de 09/11 a 30/11 (1 valor); estudo de CFG e autómatos de pilha (PDA).", tags: ["Hopcroft Cap 5-6", "CFG & Ambiguidade", "Autómatos Pilha"], highlight: "🚀 Lição 3 aberta de 09/11 a 30/11 (1 valor)", highlightType: "normal" },
+          { id: "W8_FBD", uc: "FBD", title: "AF3: Álgebra Relacional (Secção 4)", desc: "Silberschatz Cap. 2 e Cap. 27 online; seleção, projeção, renomeação, junção natural e divisão.", tags: ["Silberschatz Cap 2 & 27", "Álgebra Formal", "Operadores Relacionais"], highlight: "📐 Prática de cálculo formal e equivalências", highlightType: "normal" },
+          { id: "W8_FG", uc: "FG", title: "Atividade Sumativa 1: Data Limite de Entrega!", desc: "Submissão final da Atividade 3 (Sumativa 1) na plataforma até às 23:55 de 16/11/2026!", tags: ["Sumativa 1", "Mecânica Clássica", "Entrega Plataforma"], highlight: "🚨 🚨 Fecho: 16/11 às 23:55 (3v)", highlightType: "danger" }
+        ]
+      },
+      {
+        weekNum: 9,
+        title: "Redes Locais, Álgebra Relacional e Computação em Física",
+        start: "2026-11-16",
+        end: "2026-11-22",
+        tasks: [
+          { id: "W9_SR", uc: "SR", title: "Temática 4: Redes Locais e Gestão (Ethernet & VLAN)", desc: "Kurose Caps 6 e 7; IEEE 802.3, switches, domínios de colisão/broadcast e VLANs IEEE 802.1Q.", tags: ["IEEE 802.3", "VLAN 802.1Q", "Switching MAC"], highlight: "🔬 Análise de tramas Ethernet e trunking", highlightType: "normal" },
+          { id: "W9_POO", uc: "POO", title: "Tema 5: Validação das Decisões & Relatório", desc: "Testes polimórficos, cenários de rutura e consolidação dos artefactos da Síntese do Tópico 5.", tags: ["Cenários Rutura", "Testes Polimórficos", "UML Polimórfico"], highlight: "🧪 Conclusão dos testes e validação de desenho", highlightType: "normal" },
+          { id: "W9_LC", uc: "LC", title: "Atividade 4: Abertura do Trabalho 3 (CFG & PDA)", desc: "Enunciado do Trabalho 3 disponibilizado a 18/11; derivações gramaticais e simulação de PDA no UAbALL.", tags: ["Trabalho 3", "CFG Derivação", "UAbALL PDA"], highlight: "📑 Enunciado Trabalho 3 disponível (4 valores)", highlightType: "normal" },
+          { id: "W9_FBD", uc: "FBD", title: "Atividade Sumativa 3: Disponibilização do Enunciado!", desc: "Abertura a 16/11/2026. Tradução entre álgebra relacional e SQL e análise crítica de equivalências (5v).", tags: ["Sumativa 3", "Álgebra vs SQL", "Equivalências Semânticas"], highlight: "🚨 🚨 Sumativa 3 Aberta (5v)", highlightType: "danger" },
+          { id: "W9_FG", uc: "FG", title: "Atividade 4: Início da Parte II (Métodos Computacionais)", desc: "Chapra & Canale Caps 1, 25.1 e 25.2; introdução à resolução numérica de equações diferenciais da física.", tags: ["Chapra Caps 1 & 25", "Métodos Numéricos", "Equações Diferenciais"], highlight: "💻 Leitura e estudo dos algoritmos numéricos", highlightType: "normal" }
+        ]
+      },
+      {
+        weekNum: 10,
+        title: "Picos de Entrega: FBD Sumativa 3, POO Síntese 5 e LC T3",
+        start: "2026-11-23",
+        end: "2026-11-29",
+        tasks: [
+          { id: "W10_SR", uc: "SR", title: "Temática 4: Redes sem Fios & Wireshark Lab 4", desc: "IEEE 802.11 (Wi-Fi), WPA2/WPA3; guião laboratorial com Wireshark, arp, netstat, nslookup.", tags: ["IEEE 802.11 Wi-Fi", "WPA2/WPA3", "Lab Wireshark"], highlight: "🔬 Diagnóstico avançado de redes locais", highlightType: "normal" },
+          { id: "W10_POO", uc: "POO", title: "Tema 5: Fecho da Síntese Final do Tópico 5", desc: "Entrega do relatório de evolução, testes polimórficos e código. Submissão fecha 23/11/2026 às 9h00!", tags: ["Síntese 5", "Polimorfismo Final", "Pytest Suite"], highlight: "🚨 🚨 Fecho: 23/11 às 09:00 (3v)", highlightType: "danger" },
+          { id: "W10_LC", uc: "LC", title: "Atividade 4: Entrega da Lição 3 e Trabalho 3", desc: "Data limite de entrega: 30/11/2026 às 23:59. Lição (1v) + Trabalho 3 (4v) = 5 valores.", tags: ["Lição 3 (1v)", "Trabalho 3 (4v)", "UAbALL PDA"], highlight: "🚨 🚨 Fecho: 30/11 às 23:59 (5v)", highlightType: "danger" },
+          { id: "W10_FBD", uc: "FBD", title: "Atividade Sumativa 3: Data Limite de Entrega!", desc: "Submissão até às 23:59 de 29/11/2026! Álgebra relacional e justificação de alternativas (5 valores).", tags: ["Sumativa 3", "Álgebra Formal", "Validação Crítica"], highlight: "🚨 🚨 Fecho: 29/11 às 23:59 (5v)", highlightType: "danger" },
+          { id: "W10_FG", uc: "FG", title: "Atividade 4: Programação e Teste de Algoritmos Numéricos", desc: "Implementação computacional dos métodos de Euler e Euler-Cromer aplicados a osciladores e projéteis.", tags: ["Método Euler", "Euler-Cromer", "Python / C Simulação"], highlight: "💻 Programação de código executável em Python", highlightType: "normal" }
+        ]
+      },
+      {
+        weekNum: 11,
+        title: "Herança Múltipla em POO, Máquinas de Turing e Modelação ER",
+        start: "2026-11-30",
+        end: "2026-12-06",
+        tasks: [
+          { id: "W11_SR", uc: "SR", title: "Temática 4: Diagnóstico de Redes & Quiz Tema 4", desc: "Monitorização e diagnóstico com traceroute, ipconfig, arp; Quiz de Autoavaliação Tema 4.", tags: ["Diagnóstico TCP/IP", "arp & netstat", "Quiz Tema 4"], highlight: "🧪 Conclusão dos laboratórios práticos", highlightType: "normal" },
+          { id: "W11_SR_REFLEX", uc: "SR", title: "SR Módulo 4: Reflexão da Participação (0,5v)", desc: "Identificar uma atividade ou realização relevante de M4 e justificar no dispositivo da UC.", tags: ["Módulo 4", "Reflexão Redes Locais", "Atividade Formativa"], highlight: "⭐ Checkpoint Formativo: 0,5 valores atribuídos", highlightType: "formativa" },
+          { id: "W11_POO", uc: "POO", title: "Tema 6: Herança Múltipla, Mixins, MRO e super()", desc: "Evolução do projeto com herança múltipla, análise da ordem MRO e comparação com composição.", tags: ["Herança Múltipla", "Mixins & MRO", "super() Calls"], highlight: "🔬 Análise crítica de acoplamento e flexibilidade", highlightType: "normal" },
+          { id: "W11_LC", uc: "LC", title: "Atividade 5: Abertura da Lição Máquinas de Turing", desc: "Hopcroft Cap. 8 (8.1 a 8.4); Lição aberta de 30/11 a 21/12 (1 valor); formalismo de MT e computabilidade.", tags: ["Hopcroft Cap 8", "Máquina de Turing", "Lição 4"], highlight: "🚀 Lição 4 aberta de 30/11 a 21/12 (1 valor)", highlightType: "normal" },
+          { id: "W11_FBD", uc: "FBD", title: "AF4: Modelação Entidade-Relacionamento (Secção 5)", desc: "Silberschatz Cap. 6; análise de requisitos, entidades, atributos, cardinalidades e diagramas ER.", tags: ["Silberschatz Cap 6", "Diagramas ER", "Cardinalidades"], highlight: "📊 Elaboração de diagramas ER concetuais", highlightType: "normal" },
+          { id: "W11_FG", uc: "FG", title: "Atividade 4: Aplicação de Algoritmos a Problemas Físicos", desc: "Comparação de resultados analíticos com numéricos; discussão colaborativa das rotinas em fórum.", tags: ["Oscilador Harmónico", "Trajetórias Balísticas", "Erros Numéricos"], highlight: "📝 Comparação de precisão e convergência", highlightType: "normal" }
+        ]
+      },
+      {
+        weekNum: 12,
+        title: "Abertura do Pico Final de Avaliações",
+        start: "2026-12-07",
+        end: "2026-12-13",
+        tasks: [
+          { id: "W12_SR", uc: "SR", title: "Atividade Sumativa 2 - Trabalho 2: Abertura do Enunciado!", desc: "Disponibilizado a 16/12/2026. Resolução de cenários práticos sobre M3 e M4 (3 valores).", tags: ["Trabalho 2", "Módulo 3 & 4", "Cenários LAN"], highlight: "📑 Disponível a 16/12 às 00:00 (3 valores)", highlightType: "normal" },
+          { id: "W12_POO", uc: "POO", title: "Tema 7: Integração de Bibliotecas Python & Consolidação", desc: "Seleção e instalação de bibliotecas via pip, implementação de nova funcionalidade e fecho do código.", tags: ["PyPI Packages", "pip Install", "Refactor Final"], highlight: "📦 Integração de bibliotecas externas no projeto", highlightType: "normal" },
+          { id: "W12_LC", uc: "LC", title: "Atividade 5: Abertura do Trabalho 4 (Máquinas de Turing)", desc: "Enunciado do Trabalho 4 disponibilizado a 09/12; implementação e teste de MT no simulador UAbALL.", tags: ["Trabalho 4", "UAbALL Turing", "Decidibilidade"], highlight: "📑 Enunciado Trabalho 4 disponível (4 valores)", highlightType: "normal" },
+          { id: "W12_FBD", uc: "FBD", title: "Atividade Sumativa 4: Disponibilização do Enunciado!", desc: "Abertura a 07/12/2026. Construção de modelo ER, transformação para relacional e scripts SQL (5 valores).", tags: ["Sumativa 4", "Modelo ER", "DDL/DML Scripts"], highlight: "🚨 🚨 Sumativa 4 Aberta (5v)", highlightType: "danger" },
+          { id: "W12_FG", uc: "FG", title: "Atividade Sumativa 2: Disponibilização do Enunciado!", desc: "Disponibilizado a 11/12/2026 até às 23:55. Resolução computacional de problemas de física (5 valores).", tags: ["Sumativa 2", "Métodos Numéricos", "Relatório Código"], highlight: "🚨 🚨 Sumativa 2 Aberta (5v)", highlightType: "danger" }
+        ]
+      },
+      {
+        weekNum: 13,
+        title: "Grande Semana de Fecho das Avaliações Assíncronas",
+        start: "2026-12-14",
+        end: "2026-12-21",
+        tasks: [
+          { id: "W13_SR", uc: "SR", title: "Atividade Sumativa 2 - Trabalho 2: Data Limite de Entrega!", desc: "Submissão na plataforma até às 23:59 de 21/12/2026! Cotação: 3 valores.", tags: ["Trabalho 2", "Interligação & LAN", "Submissão Final"], highlight: "🚨 🚨 Fecho: 21/12 às 23:59 (3v)", highlightType: "danger" },
+          { id: "W13_POO", uc: "POO", title: "Tema 7: Revisão do Projeto para a Prova Síncrona", desc: "Consolidação de código, testes unitários e preparação da defesa oral no WISEflow marcada para 11/01.", tags: ["Consolidação POO", "Preparação Prova", "WISEflow Prep"], highlight: "🎯 Código congelado e documentado", highlightType: "normal" },
+          { id: "W13_LC", uc: "LC", title: "Atividade 5: Entrega da Lição 4 e Trabalho 4", desc: "Data limite: 21/12/2026 às 23:59. Lição (1v) + Trabalho 4 (4v) = 5 valores. Fecho das sumativas de LC.", tags: ["Lição 4 (1v)", "Trabalho 4 (4v)", "UAbALL MT"], highlight: "🚨 🚨 Fecho: 21/12 às 23:59 (5v)", highlightType: "danger" },
+          { id: "W13_FBD", uc: "FBD", title: "Atividade Sumativa 4: Data Limite de Entrega!", desc: "Submissão até às 23:59 de 20/12/2026! Scripts SQL e modelo ER (5 valores). Fecho de FBD.", tags: ["Sumativa 4", "Normalização", "Scripts SQL"], highlight: "🚨 🚨 Fecho: 20/12 às 23:59 (5v)", highlightType: "danger" },
+          { id: "W13_FG", uc: "FG", title: "Atividade Sumativa 2: Data Limite de Entrega!", desc: "Submissão até às 23:55 de 21/12/2026! Relatório computacional e código fonte (5 valores).", tags: ["Sumativa 2", "Código Computacional", "Relatório Físico"], highlight: "🚨 🚨 Fecho: 21/12 às 23:55 (5v)", highlightType: "danger" }
+        ]
+      },
+      {
+        weekNum: 14,
+        title: "Arranque do Projeto de Redes & Preparação Síncrona",
+        start: "2027-01-04",
+        end: "2027-01-10",
+        tasks: [
+          { id: "W14_SR", uc: "SR", title: "Projeto Final: Início do Desenvolvimento (1.ª Parte)", desc: "Desenvolvimento do Projeto Global de Redes com início a 04/01 (4 valores). Integração de toda a matéria.", tags: ["Projeto Global", "Modo Assíncrono", "Topologia Redes"], highlight: "🚀 Início a 04/01/2027 (Cotação: 4v)", highlightType: "normal" },
+          { id: "W14_POO", uc: "POO", title: "Preparação Intensiva para a Prova Síncrona WISEflow", desc: "Revisão dos conceitos de OO, padrões de desenho e estudo das rubricas para a prova de 11/01.", tags: ["Revisão Geral", "WISEflow Simulação", "Rubricas POO"], highlight: "📚 Simulação individual de questões conceptuais", highlightType: "normal" },
+          { id: "W14_LC", uc: "LC", title: "Balanço das 4 Avaliações Sumativas & Cartão", desc: "Verificação dos critérios cumulativos (mínimo de 40% em 3 das 4 atividades sumativas e média >= 10v).", tags: ["Cartão Aprendizagem", "Validação Notas", "Época Recurso"], highlight: "📊 Consulta das classificações sumativas", highlightType: "normal" },
+          { id: "W14_FBD", uc: "FBD", title: "Balanço Final de FBD & Cartão de Aprendizagem", desc: "Verificação da aprovação cumulativa (mínimo 40% nas 4 atividades somadas, média >= 10 valores).", tags: ["Cartão Aprendizagem", "Auditoria Notas", "Aprovação"], highlight: "📊 Consulta das classificações sumativas", highlightType: "normal" },
+          { id: "W14_FG", uc: "FG", title: "Atividade 7: Consolidação Final e Exames Anteriores", desc: "Revisão integrada dos conteúdos da UC e resolução de provas de anos anteriores para a síncrona.", tags: ["Provas Anos Anteriores", "Revisão Mecânica", "Revisão Numérica"], highlight: "📝 Resolução de provas modelo no fórum", highlightType: "normal" }
+        ]
+      },
+      {
+        weekNum: 15,
+        title: "Semana da Prova Síncrona de POO",
+        start: "2027-01-11",
+        end: "2027-01-17",
+        tasks: [
+          { id: "W15_SR", uc: "SR", title: "Projeto Final: Conclusão do Relatório de Redes", desc: "Finalização do documento do Projeto Global e testes de validação em simulador/Wireshark.", tags: ["Projeto Global", "Relatório Final", "Wireshark Pcaps"], highlight: "📑 Preparação da entrega até 24/01", highlightType: "normal" },
+          { id: "W15_POO", uc: "POO", title: "Atividade Sumativa 4: Prova Síncrona no WISEflow!", desc: "Momento Síncrono de POO: Segunda-feira, 11/01/2027 às 16:00! Cotação: 12 valores (mínimo de 6.0v).", tags: ["Prova Síncrona", "WISEflow", "Defesa Projeto"], highlight: "🚨 🚨 PROVA: 11/01/2027 às 16:00 (12v)", highlightType: "danger" },
+          { id: "W15_FG", uc: "FG", title: "Revisões Finais para a Prova Síncrona de Física", desc: "Sessões finais de esclarecimento de dúvidas para a prova síncrona agendada para 18/01 às 10:00.", tags: ["Dúvidas Gerais", "WISEflow Setup", "Revisão"], highlight: "🎯 Esclarecimento de dúvidas com o docente", highlightType: "normal" }
+        ]
+      },
+      {
+        weekNum: 16,
+        title: "Fecho do Semestre: Prova de Física e Validação de Redes",
+        start: "2027-01-18",
+        end: "2027-01-25",
+        tasks: [
+          { id: "W16_FG", uc: "FG", title: "Atividade Sumativa 3: Prova Síncrona no WISEflow!", desc: "Momento Síncrono de Física Geral: Segunda-feira, 18/01/2027 às 10:00! Cotação: 12 valores.", tags: ["Prova Síncrona", "WISEflow", "Toda a Matéria"], highlight: "🚨 🚨 PROVA: 18/01/2027 às 10:00 (12v)", highlightType: "danger" },
+          { id: "W16_SR_DEV", uc: "SR", title: "Projeto Final: Submissão da 1.ª Parte na Plataforma", desc: "Entrega do relatório e ficheiros do Projeto Global de Redes até às 23:59 de 24/01/2027 (4 valores).", tags: ["Submissão Projeto", "Véspera Síncrona", "Modo Assíncrono"], highlight: "🚨 🚨 Fecho: 24/01 às 23:59 (4v)", highlightType: "danger" },
+          { id: "W16_SR_SYNC", uc: "SR", title: "Atividade Sumativa 4: Validação Síncrona no Wiseflow!", desc: "Momento Síncrono de Redes: Segunda-feira, 25/01/2027 às 16:00! Cotação: 8 valores.", tags: ["Validação Científica", "Wiseflow Síncrono", "Defesa Redes"], highlight: "🚨 🚨 PROVA: 25/01/2027 às 16:00 (8v)", highlightType: "danger" }
+        ]
+      }
+    ];
+
+    /* GESTÃO DE ESTADO & PERSISTÊNCIA */
+    const STORAGE_KEYS = {
+      THEME: "uab_dashboard_theme",
+      COMPLETED_TASKS: "uab_completed_tasks",
+      NOTIFICATIONS_ACTIVE: "uab_notifications_active",
+      NOTIFY_ADVANCE: "uab_notify_advance_days",
+      MUTED_NOTIFICATIONS: "uab_muted_notifications",
+      EXPANDED_WEEKS: "uab_expanded_weeks"
+    };
+
+    let appState = {
+      theme: localStorage.getItem(STORAGE_KEYS.THEME) || "light",
+      completedTasks: JSON.parse(localStorage.getItem(STORAGE_KEYS.COMPLETED_TASKS) || "{}"),
+      notificationsActive: localStorage.getItem(STORAGE_KEYS.NOTIFICATIONS_ACTIVE) !== "false",
+      notifyAdvanceDays: parseInt(localStorage.getItem(STORAGE_KEYS.NOTIFY_ADVANCE) || "3", 10),
+      mutedNotifications: JSON.parse(localStorage.getItem(STORAGE_KEYS.MUTED_NOTIFICATIONS) || "[]"),
+      expandedWeeks: JSON.parse(localStorage.getItem(STORAGE_KEYS.EXPANDED_WEEKS) || "null"),
+      sessionDismissedNotifications: [],
+      currentMonthIndex: 0,
+      ucFilters: { SR: true, POO: true, LC: true, FBD: true, FG: true },
+      deliveriesSort: { field: "deadline", direction: "asc" }
+    };
+
+    function saveCompletedTasks() {
+      localStorage.setItem(STORAGE_KEYS.COMPLETED_TASKS, JSON.stringify(appState.completedTasks));
+      updateProgressMetrics();
+    }
+
+    function saveSettings() {
+      localStorage.setItem(STORAGE_KEYS.NOTIFICATIONS_ACTIVE, appState.notificationsActive);
+      localStorage.setItem(STORAGE_KEYS.NOTIFY_ADVANCE, appState.notifyAdvanceDays);
+      localStorage.setItem(STORAGE_KEYS.MUTED_NOTIFICATIONS, JSON.stringify(appState.mutedNotifications));
+    }
+
+    function saveExpandedWeeks() {
+      localStorage.setItem(STORAGE_KEYS.EXPANDED_WEEKS, JSON.stringify(appState.expandedWeeks));
+    }
+
+    /* SISTEMA DE NAVEGAÇÃO */
+    function switchView(viewId, ucId = null) {
+      document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
+      document.querySelectorAll(".bottom-nav-btn").forEach(b => b.classList.remove("active"));
+      document.querySelectorAll(".page-section").forEach(sec => sec.classList.remove("active"));
+
+      const sidebarMatch = document.querySelector(`.nav-btn[data-view="${viewId}"]` + (ucId ? `[data-uc="${ucId}"]` : ''));
+      if (sidebarMatch) sidebarMatch.classList.add("active");
+
+      const bottomMatch = document.querySelector(`.bottom-nav-btn[data-view="${viewId}"]`);
+      if (bottomMatch) bottomMatch.classList.add("active");
+
+      if (viewId === "ucView" && ucId) {
+        document.getElementById("ucView").classList.add("active");
+        renderUcDedicatedPage(ucId);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else {
+        const targetSection = document.getElementById(viewId);
+        if (targetSection) targetSection.classList.add("active");
+        
+        if (viewId === "weeksView") {
+          setTimeout(() => { focusCurrentWeek(true); }, 50);
+        } else {
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+      }
+
+      closeMobileDrawer();
+    }
+
+    document.querySelectorAll(".nav-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const viewId = btn.getAttribute("data-view");
+        const ucId = btn.getAttribute("data-uc");
+        switchView(viewId, ucId);
+      });
+    });
+
+    document.querySelectorAll(".bottom-nav-btn[data-view]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const viewId = btn.getAttribute("data-view");
+        switchView(viewId);
+      });
+    });
+
+    function openMobileDrawer() {
+      document.getElementById("mainSidebar").classList.add("mobile-open");
+      document.getElementById("sidebarOverlay").classList.add("active");
+    }
+
+    function closeMobileDrawer() {
+      document.getElementById("mainSidebar").classList.remove("mobile-open");
+      document.getElementById("sidebarOverlay").classList.remove("active");
+    }
+
+    document.getElementById("openDrawerBtn").addEventListener("click", openMobileDrawer);
+    document.getElementById("bottomDrawerTrigger").addEventListener("click", openMobileDrawer);
+    document.getElementById("sidebarOverlay").addEventListener("click", closeMobileDrawer);
+
+    function applyTheme(theme) {
+      document.documentElement.setAttribute("data-theme", theme);
+      const icon = theme === "dark" ? "🌙" : "☀️";
+      document.getElementById("themeToggleBtn").innerText = icon;
+      document.getElementById("mobileThemeToggleBtn").innerText = icon;
+      localStorage.setItem(STORAGE_KEYS.THEME, theme);
+      appState.theme = theme;
+    }
+
+    document.getElementById("themeToggleBtn").addEventListener("click", () => {
+      applyTheme(appState.theme === "dark" ? "light" : "dark");
+    });
+    document.getElementById("mobileThemeToggleBtn").addEventListener("click", () => {
+      applyTheme(appState.theme === "dark" ? "light" : "dark");
+    });
+
+    /* MÉTRICAS DE PROGRESSO */
+    function updateProgressMetrics() {
+      const allTasks = [];
+      WEEKS_DATA.forEach(w => w.tasks.forEach(t => allTasks.push(t)));
+
+      const totalCount = allTasks.length;
+      const completedCount = allTasks.filter(t => appState.completedTasks[t.id]).length;
+      const globalPercent = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
+
+      document.getElementById("globalProgressPercent").innerText = `${globalPercent}%`;
+      document.getElementById("globalProgressBar").style.width = `${globalPercent}%`;
+      document.getElementById("globalTasksCount").innerText = `${completedCount}/${totalCount} concluídas`;
+
+      ['SR', 'POO', 'LC', 'FBD', 'FG'].forEach(ucKey => {
+        const ucTasks = allTasks.filter(t => t.uc === ucKey);
+        const ucDone = ucTasks.filter(t => appState.completedTasks[t.id]).length;
+        const ucPercent = ucTasks.length > 0 ? Math.round((ucDone / ucTasks.length) * 100) : 0;
+
+        const textEl = document.getElementById(`progText${ucKey}`);
+        const barEl = document.getElementById(`progBar${ucKey}`);
+        if (textEl && barEl) {
+          textEl.innerText = `${ucPercent}%`;
+          barEl.style.width = `${ucPercent}%`;
+        }
+      });
+    }
+
+    /* CALENDÁRIO MATRICIAL (7 COLUNAS) RESPONSIVO */
+    const MONTHS = [
+      { name: "Setembro 2026", year: 2026, month: 8 },
+      { name: "Outubro 2026", year: 2026, month: 9 },
+      { name: "Novembro 2026", year: 2026, month: 10 },
+      { name: "Dezembro 2026", year: 2026, month: 11 },
+      { name: "Janeiro 2027", year: 2027, month: 0 }
+    ];
+
+    function renderCalendar() {
+      const currentMonth = MONTHS[appState.currentMonthIndex];
+      document.getElementById("calMonthDisplay").innerText = currentMonth.name;
+
+      const gridEl = document.getElementById("calDaysGrid");
+      gridEl.innerHTML = "";
+
+      const year = currentMonth.year;
+      const month = currentMonth.month;
+
+      const firstDay = new Date(year, month, 1);
+      const totalDays = new Date(year, month + 1, 0).getDate();
+
+      let startDayOfWeek = firstDay.getDay() - 1;
+      if (startDayOfWeek === -1) startDayOfWeek = 6;
+
+      const prevMonthTotalDays = new Date(year, month, 0).getDate();
+      for (let i = startDayOfWeek - 1; i >= 0; i--) {
+        const dayCell = document.createElement("div");
+        dayCell.className = "cal-day-cell other-month";
+        dayCell.innerHTML = `<span class="day-number">${prevMonthTotalDays - i}</span>`;
+        gridEl.appendChild(dayCell);
+      }
+
+      const today = new Date();
+      for (let d = 1; d <= totalDays; d++) {
+        const dayCell = document.createElement("div");
+        dayCell.className = "cal-day-cell";
+        if (today.getFullYear() === year && today.getMonth() === month && today.getDate() === d) {
+          dayCell.classList.add("today");
+        }
+
+        dayCell.innerHTML = `<span class="day-number">${d}</span>`;
+
+        DELIVERIES_DATA.forEach(item => {
+          if (!appState.ucFilters[item.uc]) return;
+          if (item.inCalendar === false) return;
+
+          const startDate = new Date(item.start + "T00:00:00");
+          const endDate = new Date(item.deadline);
+
+          const currentMidnight = new Date(year, month, d, 23, 59, 59);
+          const startMidnight = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate(), 0, 0, 0);
+
+          if (currentMidnight >= startMidnight && new Date(year, month, d, 0, 0, 0) <= endDate) {
+            const eventBar = document.createElement("div");
+            eventBar.className = "cal-event-bar";
+            eventBar.style.backgroundColor = `var(--color-${item.uc.toLowerCase()})`;
+            eventBar.title = `${UCS[item.uc].name} - ${item.name}\nInício: ${item.start}\nEntrega: ${item.deadline.replace('T', ' ')}\nCotação: ${item.weight}v`;
+
+            const isEndDay = (endDate.getFullYear() === year && endDate.getMonth() === month && endDate.getDate() === d);
+            eventBar.innerHTML = `
+              <span>${isEndDay ? '🏁 ' : ''}${item.uc}: ${item.name}</span>
+              <span class="event-val">${item.weight.toFixed(1)}v</span>
+            `;
+
+            eventBar.addEventListener("click", () => {
+              switchView("deliveriesView");
+            });
+
+            dayCell.appendChild(eventBar);
+          }
+        });
+
+        gridEl.appendChild(dayCell);
+      }
+
+      const totalCellsRendered = startDayOfWeek + totalDays;
+      const remainingCells = (7 - (totalCellsRendered % 7)) % 7;
+      for (let nextD = 1; nextD <= remainingCells; nextD++) {
+        const dayCell = document.createElement("div");
+        dayCell.className = "cal-day-cell other-month";
+        dayCell.innerHTML = `<span class="day-number">${nextD}</span>`;
+        gridEl.appendChild(dayCell);
+      }
+    }
+
+    document.getElementById("prevMonthBtn").addEventListener("click", () => {
+      if (appState.currentMonthIndex > 0) {
+        appState.currentMonthIndex--;
+        renderCalendar();
+      }
+    });
+
+    document.getElementById("nextMonthBtn").addEventListener("click", () => {
+      if (appState.currentMonthIndex < MONTHS.length - 1) {
+        appState.currentMonthIndex++;
+        renderCalendar();
+      }
+    });
+
+    document.querySelectorAll("[data-uc-toggle]").forEach(toggle => {
+      toggle.addEventListener("change", (e) => {
+        const uc = e.target.getAttribute("data-uc-toggle");
+        appState.ucFilters[uc] = e.target.checked;
+        const parentPill = e.target.closest(".cal-toggle-pill");
+        if (e.target.checked) parentPill.classList.add("active");
+        else parentPill.classList.remove("active");
+        renderCalendar();
+      });
+    });
+
+    /* DETEÇÃO DA SEMANA CORRENTE */
+    function getCurrentWeekIndex() {
+      const now = new Date();
+      for (let i = 0; i < WEEKS_DATA.length; i++) {
+        const s = new Date(WEEKS_DATA[i].start + "T00:00:00");
+        const e = new Date(WEEKS_DATA[i].end + "T23:59:59");
+        if (now >= s && now <= e) return i;
+      }
+      return 0;
+    }
+
+    /* ROTEIRO SEMANAL */
+    function renderWeeks() {
+      const container = document.getElementById("weeksList");
+      if (!container) return;
+      container.innerHTML = "";
+
+      const currentIdx = getCurrentWeekIndex();
+
+      if (!appState.expandedWeeks) {
+        appState.expandedWeeks = {};
+        WEEKS_DATA.forEach((w, idx) => {
+          appState.expandedWeeks[w.weekNum] = (idx === currentIdx);
+        });
+        saveExpandedWeeks();
+      }
+
+      WEEKS_DATA.forEach((week, idx) => {
+        const isCurrent = (idx === currentIdx);
+        const isExpanded = !!appState.expandedWeeks[week.weekNum];
+
+        const block = document.createElement("div");
+        block.className = `week-block ${isCurrent ? 'current-week' : ''} ${isExpanded ? 'expanded' : ''}`;
+        block.id = `weekBlock_${week.weekNum}`;
+
+        const formatDate = (iso) => {
+          const [y, m, d] = iso.split("-");
+          return `${d}/${m}`;
+        };
+
+        block.innerHTML = `
+          <div class="week-header" data-toggle-week="${week.weekNum}">
+            <div class="week-header-left">
+              <span class="week-chevron">▶</span>
+              <span class="week-number">Semana ${week.weekNum}: ${week.title}</span>
+              ${isCurrent ? '<span class="current-week-tag">Semana Atual</span>' : ''}
+            </div>
+            <div class="week-dates">${formatDate(week.start)} a ${formatDate(week.end)}</div>
+          </div>
+          <div class="week-content-body">
+            <div class="week-cards-grid" id="weekGrid_${week.weekNum}"></div>
+          </div>
+        `;
+
+        const header = block.querySelector(`[data-toggle-week="${week.weekNum}"]`);
+        header.addEventListener("click", () => {
+          const nowExpanded = !block.classList.contains("expanded");
+          if (nowExpanded) {
+            block.classList.add("expanded");
+          } else {
+            block.classList.remove("expanded");
+          }
+          appState.expandedWeeks[week.weekNum] = nowExpanded;
+          saveExpandedWeeks();
+        });
+
+        const grid = block.querySelector(`#weekGrid_${week.weekNum}`);
+
+        week.tasks.forEach(task => {
+          const ucObj = UCS[task.uc];
+          const isDone = !!appState.completedTasks[task.id];
+
+          const card = document.createElement("div");
+          card.className = `uc-activity-card ${isDone ? 'is-done' : ''}`;
+          card.id = `card_${task.id}`;
+
+          let highlightClass = "";
+          if (task.highlightType === "danger") highlightClass = "alert-danger";
+          else if (task.highlightType === "formativa") highlightClass = "alert-formativa";
+
+          const tagsHtml = (task.tags && task.tags.length > 0)
+            ? `<div class="card-tags-row">
+                 ${task.tags.map(tag => `<span class="topic-tag">${tag}</span>`).join('')}
+               </div>`
+            : "";
+
+          card.innerHTML = `
+            <div class="card-top">
+              <span class="card-uc-tag" style="background: ${ucObj.colorBg}; color: ${ucObj.color}; border: 1px solid ${ucObj.color};">
+                ${ucObj.name}
+              </span>
+              <input type="checkbox" class="smart-checkbox" id="chk_${task.id}" ${isDone ? 'checked' : ''} title="Marcar como concluída">
+            </div>
+            
+            <div class="card-task-title">${task.title}</div>
+            <div class="card-topics">${task.desc}</div>
+            
+            ${tagsHtml}
+
+            <div class="card-highlight-bar ${highlightClass}">
+              <span>${task.highlight}</span>
+            </div>
+          `;
+
+          const checkbox = card.querySelector(`#chk_${task.id}`);
+          checkbox.addEventListener("change", (e) => {
+            const checked = e.target.checked;
+            if (checked) {
+              appState.completedTasks[task.id] = true;
+              card.classList.add("is-done");
+            } else {
+              delete appState.completedTasks[task.id];
+              card.classList.remove("is-done");
+            }
+
+            const mappedDelivId = TASK_DELIVERY_MAP[task.id];
+            if (mappedDelivId) {
+              if (checked) {
+                appState.completedTasks[mappedDelivId] = true;
+              } else {
+                delete appState.completedTasks[mappedDelivId];
+              }
+            }
+
+            saveCompletedTasks();
+            renderDeliveriesTable();
+          });
+
+          grid.appendChild(card);
+        });
+
+        container.appendChild(block);
+      });
+    }
+
+    function focusCurrentWeek(smooth = true) {
+      const currentIdx = getCurrentWeekIndex();
+      const currentWeek = WEEKS_DATA[currentIdx];
+      const targetBlock = document.getElementById(`weekBlock_${currentWeek.weekNum}`);
+
+      if (targetBlock) {
+        if (!targetBlock.classList.contains("expanded")) {
+          targetBlock.classList.add("expanded");
+          appState.expandedWeeks[currentWeek.weekNum] = true;
+          saveExpandedWeeks();
+        }
+
+        targetBlock.scrollIntoView({
+          behavior: smooth ? "smooth" : "auto",
+          block: "center"
+        });
+      }
+    }
+
+    document.getElementById("focusCurrentWeekBtn").addEventListener("click", () => {
+      focusCurrentWeek(true);
+    });
+
+    document.getElementById("expandAllWeeksBtn").addEventListener("click", () => {
+      WEEKS_DATA.forEach(w => {
+        appState.expandedWeeks[w.weekNum] = true;
+        const b = document.getElementById(`weekBlock_${w.weekNum}`);
+        if (b) b.classList.add("expanded");
+      });
+      saveExpandedWeeks();
+    });
+
+    document.getElementById("collapseAllWeeksBtn").addEventListener("click", () => {
+      WEEKS_DATA.forEach(w => {
+        appState.expandedWeeks[w.weekNum] = false;
+        const b = document.getElementById(`weekBlock_${w.weekNum}`);
+        if (b) b.classList.remove("expanded");
+      });
+      saveExpandedWeeks();
+    });
+
+    /* PAINEL DE ENTREGAS & CRITÉRIOS */
+    function renderDeliveriesTable() {
+      const tbody = document.getElementById("deliveriesTableBody");
+      if (!tbody) return;
+      tbody.innerHTML = "";
+
+      const filterVal = document.getElementById("tableUcFilter") ? document.getElementById("tableUcFilter").value : "ALL";
+
+      let items = DELIVERIES_DATA.filter(item => {
+        if (filterVal === "ALL") return true;
+        return item.uc === filterVal;
+      });
+
+      const { field, direction } = appState.deliveriesSort;
+      items.sort((a, b) => {
+        let valA = a[field];
+        let valB = b[field];
+
+        if (field === "weight") {
+          valA = parseFloat(valA);
+          valB = parseFloat(valB);
+        }
+
+        if (valA < valB) return direction === "asc" ? -1 : 1;
+        if (valA > valB) return direction === "asc" ? 1 : -1;
+        return 0;
+      });
+
+      const countEl = document.getElementById("deliveriesCountLabel");
+      if (countEl) {
+        countEl.innerText = `A mostrar ${items.length} momentos de avaliação`;
+      }
+
+      items.forEach(deliv => {
+        const isDone = !!appState.completedTasks[deliv.id];
+        const tr = document.createElement("tr");
+        if (isDone) tr.classList.add("is-done");
+
+        const ucObj = UCS[deliv.uc];
+        const formatDateTime = (iso) => {
+          const parts = iso.split("T");
+          const [y, m, d] = parts[0].split("-");
+          return `${d}/${m}/${y}` + (parts[1] ? ` às ${parts[1]}` : "");
+        };
+
+        const typeBadge = deliv.type === "Síncrona" ? 'badge-sync' :
+                          deliv.type === "Assíncrona" ? 'badge-async' : 'badge-mista';
+
+        tr.innerHTML = `
+          <td>
+            <input type="checkbox" class="smart-checkbox" id="deliv_chk_${deliv.id}" ${isDone ? 'checked' : ''}>
+          </td>
+          <td>
+            <span class="badge ${ucObj.badgeClass}">${deliv.uc}</span>
+          </td>
+          <td>
+            <strong>${deliv.name}</strong>
+            <div style="font-size: 11.5px; color: var(--text-muted); margin-top: 2px;">${deliv.desc}</div>
+          </td>
+          <td><span class="badge ${typeBadge}">${deliv.type}</span></td>
+          <td class="col-mono">${deliv.start.split('-').reverse().join('/')}</td>
+          <td class="col-mono" style="font-weight: 700; color: ${deliv.type === 'Síncrona' ? 'var(--danger)' : 'inherit'}">
+            ${formatDateTime(deliv.deadline)}
+          </td>
+          <td><span class="cota-pill">${deliv.weight.toFixed(1)}v</span></td>
+        `;
+
+        const chk = tr.querySelector(`#deliv_chk_${deliv.id}`);
+        chk.addEventListener("change", (e) => {
+          const checked = e.target.checked;
+          if (checked) {
+            appState.completedTasks[deliv.id] = true;
+            tr.classList.add("is-done");
+          } else {
+            delete appState.completedTasks[deliv.id];
+            tr.classList.remove("is-done");
+          }
+
+          const mappedTasks = DELIVERY_TASK_MAP[deliv.id];
+          if (mappedTasks && mappedTasks.length > 0) {
+            mappedTasks.forEach(taskId => {
+              if (checked) {
+                appState.completedTasks[taskId] = true;
+              } else {
+                delete appState.completedTasks[taskId];
+              }
+
+              const card = document.getElementById(`card_${taskId}`);
+              const taskChk = document.getElementById(`chk_${taskId}`);
+              if (card && taskChk) {
+                taskChk.checked = checked;
+                if (checked) card.classList.add("is-done");
+                else card.classList.remove("is-done");
+              }
+            });
+          }
+
+          saveCompletedTasks();
+        });
+
+        tbody.appendChild(tr);
+      });
+    }
+
+    document.querySelectorAll(".deliveries-table th[data-sort]").forEach(th => {
+      th.addEventListener("click", () => {
+        const field = th.getAttribute("data-sort");
+        if (appState.deliveriesSort.field === field) {
+          appState.deliveriesSort.direction = appState.deliveriesSort.direction === "asc" ? "desc" : "asc";
+        } else {
+          appState.deliveriesSort.field = field;
+          appState.deliveriesSort.direction = "asc";
+        }
+        renderDeliveriesTable();
+      });
+    });
+
+    const ucFilterEl = document.getElementById("tableUcFilter");
+    if (ucFilterEl) {
+      ucFilterEl.addEventListener("change", () => {
+        renderDeliveriesTable();
+      });
+    }
+
+    /* PÁGINAS DEDICADAS POR UC */
+    function renderUcDedicatedPage(ucKey) {
+      const uc = UCS[ucKey];
+      const placeholder = document.getElementById("ucContentPlaceholder");
+      if (!placeholder) return;
+
+      placeholder.innerHTML = `
+        <div class="uc-hero-banner" style="--hero-accent: ${uc.color};">
+          <div class="uc-hero-meta">
+            <span class="badge ${uc.badgeClass}" style="font-size: 13px; padding: 6px 12px;">Código ${uc.code}</span>
+            <span class="col-mono" style="color: var(--text-muted);">Ano Letivo ${uc.year}</span>
+          </div>
+          <h1 class="uc-hero-title">${uc.fullName}</h1>
+          <div class="uc-hero-prof">
+            <span>👤 Docente Responsável:</span>
+            <strong>${uc.prof}</strong>
+          </div>
+        </div>
+
+        <div class="uc-sections-stack">
+          <div class="uc-section-card">
+            <h3 class="uc-section-title">🎯 Apresentação & Resultados de Aprendizagem (RA)</h3>
+            <p style="margin-bottom: 20px; line-height: 1.7; color: var(--text-muted);">${uc.presentation}</p>
+            <div class="ra-list">
+              ${uc.learningOutcomes.map(ra => `
+                <div class="ra-box">
+                  <span class="ra-id">${ra.id} • ${ra.title}</span>
+                  <p class="ra-desc">${ra.desc}</p>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+
+          <div class="uc-section-card">
+            <h3 class="uc-section-title">🛠️ Metodologia de Trabalho & Sequência Pedagógica</h3>
+            <p style="line-height: 1.7; margin-bottom: 16px;">${uc.methodology}</p>
+            <div style="background: var(--bg-card-subtle); padding: 14px 18px; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+              <strong>Ferramentas e Ambientes Oficiais:</strong> ${uc.bibliography.tools}
+            </div>
+          </div>
+
+          <div class="uc-section-card">
+            <h3 class="uc-section-title">⚖️ Condições Oficiais de Aprovação & Critérios</h3>
+            <p><strong>Regime de Avaliação:</strong> ${uc.approvalRules.regime}</p>
+            <p style="margin-top: 6px;"><strong>Distribuição das Ponderações:</strong> ${uc.approvalRules.weights}</p>
+            
+            <ul style="margin: 16px 0 16px 20px; display: flex; flex-direction: column; gap: 8px;">
+              ${uc.approvalRules.breakdown.map(b => `<li>${b}</li>`).join('')}
+            </ul>
+
+            <div class="rule-callout">
+              <strong>Critérios Cumulativos Obrigatórios para Aprovação:</strong>
+              <ul style="margin: 8px 0 0 20px; display: flex; flex-direction: column; gap: 6px;">
+                ${uc.approvalRules.criteria.map(c => `<li>${c}</li>`).join('')}
+              </ul>
+            </div>
+          </div>
+
+          <div class="uc-section-card">
+            <h3 class="uc-section-title">📚 Bibliografia & Recursos Pedagógicos</h3>
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+              <div>
+                <strong style="display: block; margin-bottom: 8px; color: var(--primary);">Bibliografia Obrigatória:</strong>
+                ${uc.bibliography.mandatory.map(b => `
+                  <div class="bib-item"><span class="bib-tag bib-obrig">Obrigatória</span>${b}</div>
+                `).join('')}
+              </div>
+              <div style="margin-top: 14px;">
+                <strong style="display: block; margin-bottom: 8px; color: var(--text-muted);">Bibliografia Complementar & Recursos:</strong>
+                ${uc.bibliography.complementary.map(b => `
+                  <div class="bib-item"><span class="bib-tag bib-comp">Complementar</span>${b}</div>
+                `).join('')}
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    /* MOTOR DE NOTIFICAÇÕES TOAST */
+    function checkAndShowNotifications() {
+      if (!appState.notificationsActive) return;
+
+      const container = document.getElementById("toastContainer");
+      if (!container) return;
+      container.innerHTML = "";
+
+      const now = new Date();
+      const advanceDays = appState.notifyAdvanceDays;
+
+      DELIVERIES_DATA.forEach(deliv => {
+        if (appState.mutedNotifications.includes(deliv.id)) return;
+        if (appState.sessionDismissedNotifications.includes(deliv.id)) return;
+        if (appState.completedTasks[deliv.id]) return;
+
+        const deadline = new Date(deliv.deadline);
+        const timeDiff = deadline.getTime() - now.getTime();
+        const daysDiff = timeDiff / (1000 * 3600 * 24);
+
+        if (daysDiff <= advanceDays && daysDiff >= -0.5) {
+          showToast(deliv, daysDiff);
+        }
+      });
+    }
+
+    function showToast(deliv, daysDiff) {
+      const container = document.getElementById("toastContainer");
+      if (!container) return;
+      const ucObj = UCS[deliv.uc];
+      const isUrgent = daysDiff <= 1;
+
+      const toast = document.createElement("div");
+      toast.className = `toast-card ${isUrgent ? 'urgent' : ''}`;
+      toast.id = `toast_${deliv.id}`;
+
+      let timeText = "";
+      if (daysDiff < 0) {
+        timeText = "Termina hoje ou em poucas horas!";
+      } else if (daysDiff < 1) {
+        timeText = `Falta menos de 24 horas (${Math.round(daysDiff * 24)}h)!`;
+      } else {
+        timeText = `Prazo em ${Math.ceil(daysDiff)} dias (${deliv.deadline.replace('T', ' às ')})`;
+      }
+
+      toast.innerHTML = `
+        <div class="toast-header">
+          <div style="display: flex; gap: 6px; align-items: center;">
+            <span class="badge ${ucObj.badgeClass}">${deliv.uc}</span>
+            <span class="badge ${deliv.type === 'Síncrona' ? 'badge-sync' : 'badge-async'}">${deliv.type}</span>
+          </div>
+          <button class="toast-close-btn" title="Fechar na sessão imediata" data-dismiss="${deliv.id}">✕</button>
+        </div>
+        <div class="toast-title">${deliv.name}</div>
+        <div class="toast-desc">${timeText} • Cotação: <strong>${deliv.weight.toFixed(1)} valores</strong>.</div>
+        <div class="toast-footer">
+          <button class="toast-btn toast-btn-dismiss" data-dismiss="${deliv.id}">Entendido</button>
+          <button class="toast-btn toast-btn-mute" data-mute="${deliv.id}">Não voltar a notificar</button>
+        </div>
+      `;
+
+      toast.querySelectorAll(`[data-dismiss="${deliv.id}"]`).forEach(btn => {
+        btn.addEventListener("click", () => {
+          appState.sessionDismissedNotifications.push(deliv.id);
+          toast.remove();
+        });
+      });
+
+      toast.querySelector(`[data-mute="${deliv.id}"]`).addEventListener("click", () => {
+        if (!appState.mutedNotifications.includes(deliv.id)) {
+          appState.mutedNotifications.push(deliv.id);
+          saveSettings();
+          updateMutedCountLabel();
+        }
+        toast.remove();
+      });
+
+      container.appendChild(toast);
+    }
+
+    const settingsModal = document.getElementById("settingsModal");
+    function openSettings() {
+      if (!settingsModal) return;
+      settingsModal.classList.add("open");
+      updateMutedCountLabel();
+      closeMobileDrawer();
+    }
+    
+    document.getElementById("openSettingsBtn").addEventListener("click", openSettings);
+    const mobileSettingsBtn = document.getElementById("mobileOpenSettingsBtn");
+    if (mobileSettingsBtn) mobileSettingsBtn.addEventListener("click", openSettings);
+
+    document.getElementById("closeSettingsModal").addEventListener("click", () => {
+      settingsModal.classList.remove("open");
+    });
+
+    settingsModal.addEventListener("click", (e) => {
+      if (e.target === settingsModal) settingsModal.classList.remove("open");
+    });
+
+    document.getElementById("notifyEnabledToggle").addEventListener("change", (e) => {
+      appState.notificationsActive = e.target.checked;
+      saveSettings();
+      checkAndShowNotifications();
+    });
+
+    document.getElementById("notifyAdvanceSelect").addEventListener("change", (e) => {
+      appState.notifyAdvanceDays = parseInt(e.target.value, 10);
+      saveSettings();
+      checkAndShowNotifications();
+    });
+
+    document.getElementById("clearMutedBtn").addEventListener("click", () => {
+      appState.mutedNotifications = [];
+      appState.sessionDismissedNotifications = [];
+      saveSettings();
+      updateMutedCountLabel();
+      checkAndShowNotifications();
+      alert("Lista de notificações silenciadas foi reposta!");
+    });
+
+    document.getElementById("testAlertBtn").addEventListener("click", () => {
+      const mockDeliv = {
+        id: "TEST_" + Date.now(),
+        uc: "POO",
+        name: "Atividade Sumativa 4 (Prova Síncrona no WISEflow)",
+        type: "Síncrona",
+        weight: 12.0,
+        deadline: "2027-01-11T16:00"
+      };
+      showToast(mockDeliv, 0.5);
+    });
+
+    function updateMutedCountLabel() {
+      const label = document.getElementById("mutedCountLabel");
+      if (label) {
+        label.innerText = `${appState.mutedNotifications.length} notificações silenciadas permanentemente`;
+      }
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+      applyTheme(appState.theme);
+      
+      const toggleEl = document.getElementById("notifyEnabledToggle");
+      if (toggleEl) toggleEl.checked = appState.notificationsActive;
+      
+      const selectEl = document.getElementById("notifyAdvanceSelect");
+      if (selectEl) selectEl.value = appState.notifyAdvanceDays.toString();
+      
+      updateMutedCountLabel();
+
+      renderCalendar();
+      renderWeeks();
+      renderDeliveriesTable();
+      updateProgressMetrics();
+      checkAndShowNotifications();
+    });
+  </script>
+</body>
+</html>
