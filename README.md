@@ -4,6 +4,16 @@ Gerador de Dashboards Académicos de Alto Rendimento para a Licenciatura em Enge
 
 A partir dos ficheiros PDF oficiais dos **Planos de Unidades Curriculares (PUCs)** e da **Master Prompt** incluída neste repositório, qualquer modelo de IA avançado gera um dashboard completo em ficheiro único autónomo (`index.html`), responsivo e com persistência local.
 
+### 💻 Versão Desktop
+| | |
+| :---: | :---: |
+| ![Desktop](screenshots/Dashboard_Desktop_01_Calendario.png) | ![Desktop](screenshots/Dashboard_Desktop_02_Roteiro.png) |
+
+### 📱 Versão Mobile
+| | | | |
+| :---: | :---: | :---: |  :---: |
+| ![Mobile](screenshots/Dashboard_Mobile_01_Calendario.png) | ![Mobile](screenshots/Dashboard_Mobile_02_Roteiro.png) | ![Mobile](screenshots/Dashboard_Mobile_03_Entregas.png) | ![Mobile](screenshots/Dashboard_Mobile_04_Menu.png) |
+
 ---
 
 ## ⚡ Funcionalidades do Dashboard Gerado

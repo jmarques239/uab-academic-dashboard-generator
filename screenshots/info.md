@@ -1,1 +1,0 @@
-Conjunto de screenshots tanto da versão mobile como da versão desktop, referentes ao [`templates/index.html`](templates/index.html) que foi gerado pela [`prompts/MASTER_PROMPT.md`](prompts/MASTER_PROMPT.md)
